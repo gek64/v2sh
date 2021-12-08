@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"gek_exec"
 	"gek_file"
 	"os"
+	"os/exec"
 )
 
 var (
@@ -99,8 +101,18 @@ func process() (err error) {
 		}
 	}
 
+	// 寻找需要的压缩文件
+	archiveFile, err := gek_exec.CombinedOutput(exec.Command("ls", tempLocation+"*.zip"))
+	if err != nil {
+		return err
+	}
+	_, _, err = gek_file.Exist(archiveFile)
+	if err != nil {
+		return err
+	}
+
 	// 解压文件到安装文件夹
-	err = extract(tempLocation+"v2ray*.zip", extractFiles, installLocation)
+	err = extract(tempLocation+archiveFile, extractFiles, installLocation)
 	if err != nil {
 		return err
 	}
