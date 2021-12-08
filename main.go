@@ -13,6 +13,7 @@ var (
 	cliUninstall bool
 	cliUpdate    bool
 	cliReload    bool
+	cliTest      bool
 	cliLocal     string
 	cliConfig    string
 	cliHelp      bool
@@ -24,6 +25,7 @@ func init() {
 	flag.BoolVar(&cliUninstall, "R", false, "uninstall")
 	flag.BoolVar(&cliUpdate, "U", false, "update")
 	flag.BoolVar(&cliReload, "r", false, "reload")
+	flag.BoolVar(&cliTest, "t", false, "test config")
 	flag.StringVar(&cliLocal, "l", "", "use local file without download from network")
 	flag.StringVar(&cliConfig, "c", "", "use local config")
 	flag.BoolVar(&cliHelp, "h", false, "show help")
@@ -49,11 +51,11 @@ Command:
 	-v                : show version
 
 Example:
-    1) proxyctl -I -l bins.zip -c config.json   : Install proxy and service
-    2) proxyctl -U                              : Update proxy and resources
-    3) proxyctl -R                              : Uninstall proxy and service
-	4) proxyctl -t -c config.json               : Test config
-    5) proxyctl -r                              : Reload service`
+1) proxyctl -I -l bins.zip -c config.json   : Install proxy and service
+2) proxyctl -U -l bins.zip -c config.json   : Update proxy and resources
+3) proxyctl -R                              : Uninstall proxy and service
+4) proxyctl -t -c config.json               : Test config
+5) proxyctl -r -c config.json               : Reload service`
 		fmt.Println(helpInfo)
 	}
 
@@ -85,29 +87,15 @@ func showChangelog() {
 
 func main() {
 	if cliInstall {
-		if cliEE {
-			err := install(qbteeRepo, qbteeList, true)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else {
-			err := install(qbtRepo, qbtList, false)
-			if err != nil {
-				log.Fatal(err)
-			}
+		err := install()
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 	if cliUpdate {
-		if cliEE {
-			err := update(qbteeRepo, qbteeList, true)
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else {
-			err := update(qbtRepo, qbtList, false)
-			if err != nil {
-				log.Fatal(err)
-			}
+		err := update()
+		if err != nil {
+			log.Fatal(err)
 		}
 	}
 	if cliUninstall {
@@ -118,6 +106,12 @@ func main() {
 	}
 	if cliReload {
 		err := reload()
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	if cliTest {
+		err := test()
 		if err != nil {
 			log.Println(err)
 		}

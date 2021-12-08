@@ -9,6 +9,8 @@ require (
 	gek_github v0.0.0
 	gek_service v0.0.0
 	gek_toolbox v0.0.0
+	gek_json v0.0.0
+	gek_math v0.0.0
 )
 
 replace (
@@ -17,7 +19,7 @@ replace (
 	gek_file => ../gek/gek_file
 	gek_github => ../gek/gek_github
 	gek_json => ../gek/gek_json
+	gek_math => ../gek/gek_math
 	gek_service => ../gek/gek_service
 	gek_toolbox => ../gek/gek_toolbox
-	gek_math => ../gek/gek_math
 )
