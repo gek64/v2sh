@@ -49,12 +49,6 @@ func downloadApp(repo string, repoList map[string]string, tempLocation string) (
 
 // 从压缩文件中按照给定的的文件列表解压需要的文件到输出路径
 func extract(archiveFile string, fileList []string, outputLocation string) (err error) {
-	// 如果压缩文件不存在返回错误
-	_, _, err = gek_file.Exist(archiveFile)
-	if err != nil {
-		return err
-	}
-
 	// 如果输出路径不存在则创建
 	_, _, err = gek_file.Exist(outputLocation)
 	if err != nil {
