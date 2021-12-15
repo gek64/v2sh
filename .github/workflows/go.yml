@@ -23,8 +23,6 @@ on:
         default: 'latest'
         # use ${{ github.event.inputs.version }}
 
-permissions: read-all|write-all
-
 jobs:
   build:
     runs-on: ubuntu-latest
