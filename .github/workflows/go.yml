@@ -106,7 +106,7 @@ jobs:
 
       - name: Push Release to Public Repo
         run: |
-          git clone https://gek64:${{ secrets.GITHUB_TOKEN }}@github.com/gek64/build-apps-scripts.git
+          git clone https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/gek64/build-apps-scripts.git
           rm -rf build-apps-scripts/proxyctl
           cp -r bin build-apps-scripts/proxyctl
           cd build-apps-scripts
@@ -117,4 +117,5 @@ jobs:
           echo "commit"
           git commit -m $(date +"%Y%m%d")
           echo "push"
-          git push origin main https://gek64:${{ secrets.GITHUB_TOKEN }}@github.com/gek64/build-apps-scripts.git
+          git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/gek64/build-apps-scripts.git
+          git push origin main
