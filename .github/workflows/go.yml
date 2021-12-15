@@ -105,9 +105,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout
-          uses: actions/checkout@v2
-          with:
-            repository: gek64/build-apps-scripts
+        uses: actions/checkout@v2
+        with:
+          repository: gek64/build-apps-scripts
 
       - name: Push Release to Public Repo
         run: |
