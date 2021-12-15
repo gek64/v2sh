@@ -106,12 +106,15 @@ jobs:
 
       - name: Push Release to Public Repo
         run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git clone https://github.com/gek64/build-apps-scripts.git
           rm -rf build-apps-scripts/proxyctl
           cp -r bin build-apps-scripts/proxyctl
           cd build-apps-scripts
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          echo "add"
           git add .
+          echo "commit"
           git commit -m $(date +"%Y%m%d")
+          echo "push"
           git push origin main
