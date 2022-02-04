@@ -44,7 +44,7 @@ User=nobody
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
-ExecStart=/usr/local/bin/proxy/v2ray -config /usr/local/bin/proxy/config.json
+ExecStart=/usr/local/bin/proxy/v2ray -confdir /usr/local/bin/proxy/
 Restart=on-failure
 RestartPreventExitStatus=23
 
