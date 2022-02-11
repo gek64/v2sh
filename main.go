@@ -14,7 +14,7 @@ var (
 	cliUpdate    bool
 	cliReload    bool
 	cliTest      bool
-	cliLocal     string
+	cliLocalFile string
 	cliConfig    string
 	cliHelp      bool
 	cliVersion   bool
@@ -26,7 +26,7 @@ func init() {
 	flag.BoolVar(&cliUpdate, "U", false, "update")
 	flag.BoolVar(&cliReload, "r", false, "reload")
 	flag.BoolVar(&cliTest, "t", false, "test config")
-	flag.StringVar(&cliLocal, "l", "", "use local file without download from network")
+	flag.StringVar(&cliLocalFile, "l", "", "use local file without download from network")
 	flag.StringVar(&cliConfig, "c", "", "use local config")
 	flag.BoolVar(&cliHelp, "h", false, "show help")
 	flag.BoolVar(&cliVersion, "v", false, "show version")
