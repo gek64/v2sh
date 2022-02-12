@@ -3,6 +3,7 @@ package main
 import (
 	"gek_service"
 	"gek_service_freebsd"
+	"os"
 	"runtime"
 )
 
@@ -14,6 +15,15 @@ type Service struct {
 // 新建服务
 func newService(name string, content string) (s Service) {
 	return Service{Name: name, Content: content}
+}
+
+// 新建服务(从文件)
+func newServiceFromFile(name string, file string) (s Service, err error) {
+	bytes, err := os.ReadFile(file)
+	if err != nil {
+		return Service{}, err
+	}
+	return newService(name, string(bytes)), nil
 }
 
 // 安装服务

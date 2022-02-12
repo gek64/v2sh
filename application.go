@@ -5,6 +5,7 @@ import (
 	"gek_downloader"
 	"gek_exec"
 	"gek_github"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,43 +13,38 @@ import (
 )
 
 var (
-	// 应用安装目录
-	installLocation = "/usr/local/bin/proxy/"
-
-	// 应用下载临时目录
-	tempLocation = "/tmp/proxy_installer/"
-	// 应用文件
-	appFiles = []string{"v2ray", "config.json", "geoip.dat", "geosite.dat"}
-	// 目标文件名
-	targetFiles = []string{installLocation + appFiles[0]}
-	// 支持的系统
-	supportedOS = []string{"linux", "freebsd"}
+	// TEMP 应用下载临时目录
+	TEMP = "/tmp/proxy_installer/"
 )
 
 type Application struct {
-	// 应用文件
-	File string
+	// app文件
+	appFiles []string
+	// 应用URL
+	Url string
+	// 是否需要解压
+	needExtract bool
 	// 应用安装文件夹
 	Location string
 }
 
 // 新建应用
-func newApplication(file string, location string) (a Application) {
-	return Application{File: file, Location: location}
+func newApplication(appFiles []string, url string, needExtract bool, location string) (a Application) {
+	return Application{appFiles: appFiles, Url: url, needExtract: needExtract, Location: location}
 }
 
-// 新建应用(从Github)s
-func newApplicationFromGithub(repo string, appMap map[string]string, location string) (a Application, err error) {
+// 新建应用(从Github)
+func newApplicationFromGithub(appFiles []string, repo string, appMap map[string]string, needExtract bool, location string) (a Application, err error) {
 	// 获取应用链接
 	downloadLink, err := gek_github.GetDownloadLink(repo, appMap)
 	if err != nil {
 		return Application{}, err
 	}
-	return newApplication(downloadLink, location), nil
+	return newApplication(appFiles, downloadLink, needExtract, location), nil
 }
 
 // 安装应用
-func (a Application) install(needExtract bool) (err error) {
+func (a Application) install() (err error) {
 	// 检查安装文件夹情况
 	// 不存在则新建
 	_, err = os.Stat(a.Location)
@@ -59,41 +55,41 @@ func (a Application) install(needExtract bool) (err error) {
 		}
 	}
 
-	if needExtract {
+	if a.needExtract {
 		// 检查临时文件夹情况
-		_, err = os.Stat(tempLocation)
+		_, err = os.Stat(TEMP)
 		if os.IsNotExist(err) {
-			err = os.MkdirAll(tempLocation, 755)
+			err = os.MkdirAll(TEMP, 755)
 			if err != nil {
 				return err
 			}
 		}
+		// 结束后删除临时文件夹
+		defer func(path string) {
+			err = os.RemoveAll(path)
+			if err != nil {
+				log.Panicln(err)
+			}
+		}(TEMP)
 		// 下载需解压文件到临时文件夹
-		err = gek_downloader.Downloader(a.File, tempLocation, "")
+		err = gek_downloader.Downloader(a.Url, TEMP, "")
 		if err != nil {
 			return err
 		}
 		// 解压文件到安装文件夹
-		err = extract(tempLocation+"*.zip", appFiles, a.Location)
+		err = extract(TEMP+"*.zip", a.appFiles, a.Location)
 		if err != nil {
 			return err
 		}
-
 	} else {
-		err = gek_downloader.Downloader(a.File, "", a.Location+appFiles[0])
+		err = gek_downloader.Downloader(a.Url, "", filepath.Join(a.Location, a.appFiles[0]))
 		if err != nil {
 			return err
 		}
 	}
 
 	// 可执行文件赋权755
-	err = chmod(targetFiles, 755)
-	if err != nil {
-		return err
-	}
-
-	// 删除临时文件夹
-	err = os.RemoveAll(tempLocation)
+	err = chmod(a.appFiles, 755)
 	if err != nil {
 		return err
 	}
@@ -104,22 +100,26 @@ func (a Application) install(needExtract bool) (err error) {
 // 卸载应用
 func (a Application) uninstall() (err error) {
 	// 检测应用安装情况
-	_, err = os.Stat(filepath.Join(a.Location, appFiles[0]))
+	_, err = os.Stat(filepath.Join(a.Location, a.appFiles[0]))
 	if os.IsNotExist(err) {
-		return fmt.Errorf("can't find app location %s", filepath.Join(a.Location, appFiles[0]))
+		return fmt.Errorf("can't find app location %s", filepath.Join(a.Location, a.appFiles[0]))
 	}
+
 	// 删除应用文件
-	err = os.RemoveAll(filepath.Join(a.Location, appFiles[0]))
-	if err != nil {
-		return err
+	for _, app := range a.appFiles {
+		err = os.RemoveAll(filepath.Join(a.Location, app))
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 
 // 测试应用
 func (a Application) test() (err error) {
 	// 查看app是否存在
-	exist, app, _ := gek_exec.Exist(filepath.Join(a.Location, appFiles[0]))
+	exist, app, _ := gek_exec.Exist(filepath.Join(a.Location, a.appFiles[0]))
 	if !exist {
 		return fmt.Errorf("can not find app")
 	}

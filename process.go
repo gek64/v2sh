@@ -6,6 +6,11 @@ import (
 	"runtime"
 )
 
+var (
+	// 支持的系统
+	supportedOS = []string{"linux", "freebsd"}
+)
+
 // 主要功能函数
 // 安装
 func install() (err error) {
@@ -61,7 +66,7 @@ func update() (err error) {
 	// 如果已经指定本地文件则不进行下载
 	if cliLocalFile == "" {
 		// 下载应用
-		err = downloadApp(proxyRepo, proxyList, tempLocation)
+		err = downloadApp(proxyRepo, proxyList, TEMP)
 		if err != nil {
 			return err
 		}
