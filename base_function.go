@@ -7,6 +7,11 @@ import (
 	"os/exec"
 )
 
+var (
+	// 支持的系统
+	supportedOS = []string{"linux", "freebsd"}
+)
+
 // 功能实现函数
 // 下载应用到临时目录
 func download(downloadLink, location string) (err error) {

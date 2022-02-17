@@ -6,11 +6,6 @@ import (
 	"runtime"
 )
 
-var (
-	// 支持的系统
-	supportedOS = []string{"linux", "freebsd"}
-)
-
 // 主要功能函数
 // 安装
 func install() (err error) {
