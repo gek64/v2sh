@@ -1,7 +1,5 @@
 module proxyctl
 
-go 1.17
-
 require (
 	gek_downloader v0.0.0
 	gek_exec v0.0.0

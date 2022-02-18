@@ -4,7 +4,7 @@ var (
 	// 工具链
 	linuxToolbox = []string{"unzip", "service", "systemd"}
 
-	// 代理文件
+	// 应用相关
 	linuxRepo     = "v2fly/v2ray-core"
 	linuxRepoList = map[string]string{
 		"linux_386":      "v2ray-linux-32.zip",
@@ -17,11 +17,22 @@ var (
 		"linux_mips64le": "v2ray-linux-mips64le.zip",
 		"linux_riscv64":  "v2ray-linux-riscv64.zip",
 	}
-	// 资源文件
-	linuxResources = []string{"https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat", "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"}
-	// 服务名称
-	linuxServiceName = "v2ray.service"
-	// 服务内容
+	linuxBins         = []string{"v2ray", "v2ctl"}
+	linuxBinsLocation = "/usr/local/bin/"
+	linuxNeedExtract  = true
+
+	// 配置文件相关
+	linuxConfigName     = "config.json"
+	linuxConfigContent  = "{}"
+	linuxConfigLocation = "/usr/local/etc/v2ray/"
+
+	// 资源文件相关
+	linuxResources         = []string{"geoip.dat", "geosite.dat"}
+	linuxResourcesUrl      = []string{"https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat", "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"}
+	linuxResourcesLocation = "/usr/local/share/v2ray/"
+
+	// 服务相关
+	linuxServiceName    = "v2ray.service"
 	linuxServiceContent = `[Unit]
 Description=V2ray Service
 After=network.target nss-lookup.target
@@ -31,7 +42,7 @@ User=nobody
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
-ExecStart=/usr/local/bin/proxy/v2ray -confdir /usr/local/bin/proxy/
+ExecStart=/usr/local/bin/v2ray -confdir /usr/local/etc/v2ray/
 Restart=on-failure
 RestartPreventExitStatus=23
 

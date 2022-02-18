@@ -6,6 +6,7 @@ import (
 	"gek_toolbox"
 	"log"
 	"os"
+	"runtime"
 )
 
 var (
@@ -67,33 +68,43 @@ Example:
 
 	// 打印版本信息
 	if cliVersion {
-		fmt.Println("v1.00")
+		fmt.Println("v2.00")
 		os.Exit(0)
 	}
 
 	// 检查运行库是否完整
-	err := gek_toolbox.CheckToolbox(toolbox)
-	if err != nil {
-		log.Fatal(err)
+	switch runtime.GOOS {
+	case supportedOS[0]:
+		err := gek_toolbox.CheckToolbox(linuxToolbox)
+		if err != nil {
+			log.Fatal(err)
+		}
+	case supportedOS[1]:
+		err := gek_toolbox.CheckToolbox(freebsdToolbox)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
 func showChangelog() {
 	var versionInfo = `Changelog:
   1.00:
-    - First release`
+    - First release
+  2.00:
+    - Modular rewrite code`
 	fmt.Println(versionInfo)
 }
 
 func main() {
 	if cliInstall {
-		err := install()
+		err := install(cliConfig)
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
 	if cliUpdate {
-		err := update()
+		err := update(cliConfig)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -101,17 +112,17 @@ func main() {
 	if cliUninstall {
 		err := uninstall()
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
 	}
 	if cliReload {
-		err := reload()
+		err := reload(cliConfig)
 		if err != nil {
 			log.Println(err)
 		}
 	}
 	if cliTest {
-		err := test()
+		err := test(cliConfig)
 		if err != nil {
 			log.Println(err)
 		}

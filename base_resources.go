@@ -8,14 +8,16 @@ import (
 
 type Resources struct {
 	// 资源文件
-	files []string
+	Files []string
+	// 资源链接
+	Urls []string
 	// 资源安装文件夹
 	Location string
 }
 
 // 新建资源
-func newResources(files []string, location string) (r Resources) {
-	return Resources{files: files, Location: location}
+func newResources(files []string, urls []string, location string) (r Resources) {
+	return Resources{Files: files, Urls: urls, Location: location}
 }
 
 // 安装资源
@@ -30,12 +32,19 @@ func (r Resources) install() (err error) {
 		}
 	}
 	// 下载资源文件到资源安装路径
-	for _, f := range r.files {
-		err = gek_downloader.Downloader(f, r.Location, "")
+	for _, url := range r.Urls {
+		err = gek_downloader.Downloader(url, r.Location, "")
 		if err != nil {
 			return err
 		}
 	}
+
+	// 赋权755
+	err = chmodRecursive(r.Location, 755)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

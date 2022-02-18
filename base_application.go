@@ -5,11 +5,13 @@ import (
 	"gek_downloader"
 	"gek_exec"
 	"gek_github"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 var (
@@ -71,13 +73,30 @@ func (a Application) install() (err error) {
 				log.Panicln(err)
 			}
 		}(TEMP)
-		// 下载需解压文件到临时文件夹
+
+		// 下载压缩文件到临时文件夹
 		err = gek_downloader.Downloader(a.Url, TEMP, "")
 		if err != nil {
 			return err
 		}
+
+		// 读取下载的压缩文件名
+		var zipFile string
+		fileInfos, err := ioutil.ReadDir(TEMP)
+		if err != nil {
+			fmt.Println(err)
+		}
+		for _, f := range fileInfos {
+			if strings.Contains(f.Name(), ".zip") {
+				zipFile = f.Name()
+				break
+			}
+		}
+		if zipFile == "" {
+			return fmt.Errorf("can't find the download application archive file")
+		}
 		// 解压文件到安装文件夹
-		err = extract(TEMP+"*.zip", a.appFiles, a.Location)
+		err = extract(filepath.Join(TEMP, zipFile), a.appFiles, a.Location)
 		if err != nil {
 			return err
 		}
@@ -89,9 +108,11 @@ func (a Application) install() (err error) {
 	}
 
 	// 可执行文件赋权755
-	err = chmod(a.appFiles, 755)
-	if err != nil {
-		return err
+	for _, appFile := range a.appFiles {
+		err = chmodRecursive(filepath.Join(a.Location, appFile), 755)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -117,7 +138,7 @@ func (a Application) uninstall() (err error) {
 }
 
 // 测试应用
-func (a Application) test() (err error) {
+func (a Application) test(configFile string) (err error) {
 	// 查看app是否存在
 	exist, app, _ := gek_exec.Exist(filepath.Join(a.Location, a.appFiles[0]))
 	if !exist {
@@ -125,11 +146,19 @@ func (a Application) test() (err error) {
 	}
 
 	// 分系统运行不同的命令
+	var c string
 	switch runtime.GOOS {
 	case supportedOS[0]:
-		err = gek_exec.Run(exec.Command(app, "-test"))
+		c = linuxConfigLocation
 	case supportedOS[1]:
-		err = gek_exec.Run(exec.Command(app, "test"))
+		c = freebsdConfigLocation
 	}
+
+	if configFile != "" {
+		err = gek_exec.Run(exec.Command(app, "-test", "-config", configFile))
+	} else {
+		err = gek_exec.Run(exec.Command(app, "-test", "-confdir", c))
+	}
+
 	return err
 }

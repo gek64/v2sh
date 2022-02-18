@@ -5,6 +5,7 @@ import (
 	"gek_exec"
 	"os"
 	"os/exec"
+	"strconv"
 )
 
 var (
@@ -58,12 +59,18 @@ func extract(archiveFile string, fileList []string, location string) (err error)
 }
 
 // 给文件列表中的文件赋权
-func chmod(fileList []string, mode os.FileMode) (err error) {
+func chmodList(fileList []string, mode os.FileMode) (err error) {
 	for _, f := range fileList {
 		err = os.Chmod(f, mode)
 		if err != nil {
 			return err
 		}
 	}
+	return nil
+}
+
+// 给文件列表中的文件赋权
+func chmodRecursive(path string, mode int) (err error) {
+	err = gek_exec.Run(exec.Command("chmod", "-R", strconv.Itoa(mode), path))
 	return nil
 }

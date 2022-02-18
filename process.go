@@ -1,35 +1,94 @@
 package main
 
 import (
-	"fmt"
-	"gek_file"
+	"log"
 	"runtime"
 )
 
-// 主要功能函数
-// 安装
-func install() (err error) {
+var (
+	app       Application
+	config    Config
+	resources Resources
+	service   Service
+)
 
-	newApplicationFromGithub()
+func init() {
+	var a = &app
+	var c = &config
+	var r = &resources
+	var s = &service
+	var err error
 
-	// 安装配置文件
-	err = installConfig(installLocation, cliConfig)
+	switch runtime.GOOS {
+	case supportedOS[0]:
+		// 应用初始化
+		*a, err = newApplicationFromGithub(linuxBins, linuxRepo, linuxRepoList, linuxNeedExtract, linuxBinsLocation)
+		if err != nil {
+			log.Panicln(err)
+		}
+		// 配置初始化
+		*c = newConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation)
+
+		// 资源初始化
+		*r = newResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation)
+
+		// 服务初始化
+		*s = newService(linuxServiceName, linuxServiceContent)
+
+	case supportedOS[1]:
+		// 应用初始化
+		*a, err = newApplicationFromGithub(freebsdBins, freebsdRepo, freebsdRepoList, freebsdNeedExtract, freebsdBinsLocation)
+		if err != nil {
+			log.Panicln(err)
+		}
+		// 配置初始化
+		*c = newConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation)
+
+		// 资源初始化
+		*r = newResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation)
+
+		// 服务初始化
+		*s = newService(freebsdServiceName, freebsdServiceContent)
+	}
+}
+
+func install(configFile string) (err error) {
+	if configFile != "" {
+		switch runtime.GOOS {
+		case supportedOS[0]:
+			// 配置装载内容
+			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			if err != nil {
+				return err
+			}
+		case supportedOS[1]:
+			// 配置装载内容
+			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	// 应用安装
+	err = app.install()
 	if err != nil {
 		return err
 	}
-
-	// 安装服务
-	switch runtime.GOOS {
-	case supportedOS[0]:
-		err = installService(linuxServiceName, linuxServiceContent)
-		if err != nil {
-			return err
-		}
-	case supportedOS[1]:
-		err = installService(freebsdServiceName, freebsdServiceContent)
-		if err != nil {
-			return err
-		}
+	// 配置安装
+	err = config.install()
+	if err != nil {
+		return err
+	}
+	// 资源安装
+	err = resources.install()
+	if err != nil {
+		return err
+	}
+	// 服务安装
+	err = service.install()
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -37,86 +96,129 @@ func install() (err error) {
 
 // 卸载
 func uninstall() (err error) {
-	// 重置服务
-	err = deleteApp(installLocation)
+	// 停止应用+卸载服务
+	err = service.uninstall()
 	if err != nil {
-		return
+		log.Println(err)
 	}
-	// 卸载服务
-	err = uninstallService(serviceName, serviceContent)
+	// 卸载配置文件
+	err = config.uninstall()
 	if err != nil {
-		return err
+		log.Println(err)
 	}
+	// 卸载资源
+	err = resources.uninstall()
+	if err != nil {
+		log.Println(err)
+	}
+	// 卸载应用
+	err = app.uninstall()
+	if err != nil {
+		log.Println(err)
+	}
+
 	return nil
 }
 
 // 更新
-func update() (err error) {
-	// 需要应用已安装
-	exist, _, _ := gek_file.Exist(targetFiles[0])
-	if !exist {
-		return fmt.Errorf("app is not installed")
-	}
-
-	// 如果已经指定本地文件则不进行下载
-	if cliLocalFile == "" {
-		// 下载应用
-		err = downloadApp(proxyRepo, proxyList, TEMP)
+func update(configFile string) (err error) {
+	if configFile != "" {
+		switch runtime.GOOS {
+		case supportedOS[0]:
+			// 配置装载内容
+			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			if err != nil {
+				return err
+			}
+		case supportedOS[1]:
+			// 配置装载内容
+			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			if err != nil {
+				return err
+			}
+		}
+		// 配置卸载
+		err = config.uninstall()
+		if err != nil {
+			return err
+		}
+		// 配置安装
+		err = config.install()
 		if err != nil {
 			return err
 		}
 	}
-	// 处理应用
-	err = process()
+
+	// 应用卸载
+	err = app.uninstall()
+	if err != nil {
+		return err
+	}
+	// 应用安装
+	err = app.install()
 	if err != nil {
 		return err
 	}
 
-	// 下载资源文件
-	err = downloadResource(resourcesList, installLocation)
+	// 资源卸载
+	err = resources.uninstall()
 	if err != nil {
 		return err
 	}
-	// 安装配置文件
-	err = installConfig(installLocation, cliConfig)
+	// 资源安装
+	err = resources.install()
 	if err != nil {
 		return err
 	}
-	// 重载应用
-	err = reload()
+
+	// 服务重启
+	err = service.restart()
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 // 重载
-func reload() (err error) {
-	// 安装配置文件
-	err = installConfig(installLocation, cliConfig)
+func reload(configFile string) (err error) {
+	if configFile != "" {
+		switch runtime.GOOS {
+		case supportedOS[0]:
+			// 配置装载内容
+			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			if err != nil {
+				return err
+			}
+		case supportedOS[1]:
+			// 配置装载内容
+			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			if err != nil {
+				return err
+			}
+		}
+		// 配置卸载
+		err = config.uninstall()
+		if err != nil {
+			return err
+		}
+		// 配置安装
+		err = config.install()
+		if err != nil {
+			return err
+		}
+	}
+
+	// 服务重启
+	err = service.restart()
 	if err != nil {
 		return err
 	}
-	// 重载服务
-	err = reloadService(serviceName, serviceContent)
-	if err != nil {
-		return err
-	}
+
 	return nil
 }
 
 // 测试
-func test() (err error) {
-	if cliConfig != "" {
-		err = testConfig(targetFiles[0], cliConfig)
-		if err != nil {
-			return err
-		}
-	} else {
-		err = testConfig(targetFiles[0], defaultConfig)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
+func test(configFile string) (err error) {
+	return app.test(configFile)
 }

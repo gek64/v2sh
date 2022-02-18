@@ -47,6 +47,12 @@ func (c Config) install() (err error) {
 		return err
 	}
 
+	// 赋权755
+	err = chmodRecursive(c.Location, 755)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
