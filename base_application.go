@@ -5,6 +5,7 @@ import (
 	"gek_downloader"
 	"gek_exec"
 	"gek_github"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -57,6 +58,7 @@ func (a Application) install() (err error) {
 		}
 	}
 
+	// 应用下载+解压安装
 	if a.needExtract {
 		// 检查临时文件夹情况
 		_, err = os.Stat(TEMP)
@@ -102,6 +104,72 @@ func (a Application) install() (err error) {
 		}
 	} else {
 		err = gek_downloader.Downloader(a.Url, "", filepath.Join(a.Location, a.appFiles[0]))
+		if err != nil {
+			return err
+		}
+	}
+
+	// 可执行文件赋权755
+	for _, appFile := range a.appFiles {
+		err = chmodRecursive(filepath.Join(a.Location, appFile), 755)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// 安装应用(从本地文件,无需网络下载)
+func (a Application) installFromLocal(localFile string) (err error) {
+	// 检查本地文件是否存在
+	_, err = os.Stat(localFile)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("%s is not exist", localFile)
+	}
+
+	// 检查安装文件夹情况
+	// 不存在则新建
+	_, err = os.Stat(a.Location)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(a.Location, 755)
+		if err != nil {
+			return err
+		}
+	}
+
+	// 应用解压安装
+	if a.needExtract {
+		// 解压文件到安装文件夹
+		err = extract(localFile, a.appFiles, a.Location)
+		if err != nil {
+			return err
+		}
+	} else {
+		// 打开本地文件
+		fs, err := os.OpenFile(localFile, os.O_RDWR, 755)
+		if err != nil {
+			return err
+		}
+		defer func(f *os.File) {
+			err := f.Close()
+			if err != nil {
+				log.Panicln(err)
+			}
+		}(fs)
+		// 创建复制目标文件
+		fd, err := os.OpenFile(filepath.Join(a.Location, a.appFiles[0]), os.O_RDWR|os.O_CREATE, 755)
+		if err != nil {
+			return err
+		}
+		defer func(f *os.File) {
+			err := f.Close()
+			if err != nil {
+				log.Panicln(err)
+			}
+		}(fd)
+		// 复制文件
+		_, err = io.Copy(fd, fs)
 		if err != nil {
 			return err
 		}

@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"runtime"
 )
 
@@ -52,17 +54,17 @@ func init() {
 	}
 }
 
+// 安装
 func install(configFile string) (err error) {
+	// 配置装载内容
 	if configFile != "" {
 		switch runtime.GOOS {
 		case supportedOS[0]:
-			// 配置装载内容
 			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
 			if err != nil {
 				return err
 			}
 		case supportedOS[1]:
-			// 配置装载内容
 			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
 			if err != nil {
 				return err
@@ -82,6 +84,54 @@ func install(configFile string) (err error) {
 	}
 	// 资源安装
 	err = resources.install()
+	if err != nil {
+		return err
+	}
+	// 服务安装
+	err = service.install()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// 安装(从本地文件,无需网络下载)
+func installFromLocal(configFile string, localFile string) (err error) {
+	// 检查本地文件是否存在
+	_, err = os.Stat(localFile)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("%s is not exist", localFile)
+	}
+
+	// 配置装载内容
+	if configFile != "" {
+		switch runtime.GOOS {
+		case supportedOS[0]:
+			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			if err != nil {
+				return err
+			}
+		case supportedOS[1]:
+			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	// 应用安装
+	err = app.installFromLocal(localFile)
+	if err != nil {
+		return err
+	}
+	// 配置安装
+	err = config.install()
+	if err != nil {
+		return err
+	}
+	// 资源安装
+	err = resources.installFromLocal(localFile)
 	if err != nil {
 		return err
 	}
@@ -167,6 +217,72 @@ func update(configFile string) (err error) {
 	}
 	// 资源安装
 	err = resources.install()
+	if err != nil {
+		return err
+	}
+
+	// 服务重启
+	err = service.restart()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// 更新(从本地文件,无需网络下载)
+func updateFromLocal(configFile string, localFile string) (err error) {
+	// 检查本地文件是否存在
+	_, err = os.Stat(localFile)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("%s is not exist", localFile)
+	}
+
+	if configFile != "" {
+		switch runtime.GOOS {
+		case supportedOS[0]:
+			// 配置装载内容
+			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			if err != nil {
+				return err
+			}
+		case supportedOS[1]:
+			// 配置装载内容
+			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			if err != nil {
+				return err
+			}
+		}
+		// 配置卸载
+		err = config.uninstall()
+		if err != nil {
+			return err
+		}
+		// 配置安装
+		err = config.install()
+		if err != nil {
+			return err
+		}
+	}
+
+	// 应用卸载
+	err = app.uninstall()
+	if err != nil {
+		return err
+	}
+	// 应用安装
+	err = app.installFromLocal(localFile)
+	if err != nil {
+		return err
+	}
+
+	// 资源卸载
+	err = resources.uninstall()
+	if err != nil {
+		return err
+	}
+	// 资源安装
+	err = resources.installFromLocal(localFile)
 	if err != nil {
 		return err
 	}

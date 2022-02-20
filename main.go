@@ -68,7 +68,7 @@ Example:
 
 	// 打印版本信息
 	if cliVersion {
-		fmt.Println("v2.00")
+		fmt.Println("v2.01")
 		os.Exit(0)
 	}
 
@@ -92,21 +92,37 @@ func showChangelog() {
   1.00:
     - First release
   2.00:
-    - Modular rewrite code`
+    - Modular rewrite code
+  2.01:
+    - Add local file support`
 	fmt.Println(versionInfo)
 }
 
 func main() {
 	if cliInstall {
-		err := install(cliConfig)
-		if err != nil {
-			log.Fatal(err)
+		if cliLocalFile != "" {
+			err := installFromLocal(cliConfig, cliLocalFile)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			err := install(cliConfig)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 	if cliUpdate {
-		err := update(cliConfig)
-		if err != nil {
-			log.Fatal(err)
+		if cliLocalFile != "" {
+			err := updateFromLocal(cliConfig, cliLocalFile)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			err := update(cliConfig)
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 	}
 	if cliUninstall {
