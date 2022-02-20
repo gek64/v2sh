@@ -77,13 +77,15 @@ Example:
 	case supportedOS[0]:
 		err := gek_toolbox.CheckToolbox(linuxToolbox)
 		if err != nil {
-			log.Fatal(err)
+			log.Panicln(err)
 		}
 	case supportedOS[1]:
 		err := gek_toolbox.CheckToolbox(freebsdToolbox)
 		if err != nil {
-			log.Fatal(err)
+			log.Panicln(err)
 		}
+	default:
+		log.Panicf("%s is not supported", runtime.GOOS)
 	}
 }
 
@@ -103,12 +105,12 @@ func main() {
 		if cliLocalFile != "" {
 			err := installFromLocal(cliConfig, cliLocalFile)
 			if err != nil {
-				log.Fatal(err)
+				log.Panicln(err)
 			}
 		} else {
 			err := install(cliConfig)
 			if err != nil {
-				log.Fatal(err)
+				log.Panicln(err)
 			}
 		}
 	}
@@ -116,19 +118,19 @@ func main() {
 		if cliLocalFile != "" {
 			err := updateFromLocal(cliConfig, cliLocalFile)
 			if err != nil {
-				log.Fatal(err)
+				log.Panicln(err)
 			}
 		} else {
 			err := update(cliConfig)
 			if err != nil {
-				log.Fatal(err)
+				log.Panicln(err)
 			}
 		}
 	}
 	if cliUninstall {
 		err := uninstall()
 		if err != nil {
-			log.Fatal(err)
+			log.Panicln(err)
 		}
 	}
 	if cliReload {
