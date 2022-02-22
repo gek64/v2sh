@@ -68,7 +68,7 @@ Example:
 
 	// 打印版本信息
 	if cliVersion {
-		fmt.Println("v2.01")
+		fmt.Println("v2.02")
 		os.Exit(0)
 	}
 
@@ -87,6 +87,16 @@ Example:
 	default:
 		log.Panicf("%s is not supported", runtime.GOOS)
 	}
+
+	// 初始化
+	if cliLocalFile != "" {
+		initLocal()
+	} else {
+		err := initNetwork()
+		if err != nil {
+			log.Panicln(err)
+		}
+	}
 }
 
 func showChangelog() {
@@ -96,7 +106,9 @@ func showChangelog() {
   2.00:
     - Modular rewrite code
   2.01:
-    - Add local file support`
+    - Add local file support
+  2.02:
+    - Fix bug`
 	fmt.Println(versionInfo)
 }
 

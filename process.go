@@ -7,53 +7,6 @@ import (
 	"runtime"
 )
 
-var (
-	app       Application
-	config    Config
-	resources Resources
-	service   Service
-)
-
-func init() {
-	var a = &app
-	var c = &config
-	var r = &resources
-	var s = &service
-	var err error
-
-	switch runtime.GOOS {
-	case supportedOS[0]:
-		// 应用初始化
-		*a, err = newApplicationFromGithub(linuxBins, linuxRepo, linuxRepoList, linuxNeedExtract, linuxBinsLocation)
-		if err != nil {
-			log.Panicln(err)
-		}
-		// 配置初始化
-		*c = newConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation)
-
-		// 资源初始化
-		*r = newResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation)
-
-		// 服务初始化
-		*s = newService(linuxServiceName, linuxServiceContent)
-
-	case supportedOS[1]:
-		// 应用初始化
-		*a, err = newApplicationFromGithub(freebsdBins, freebsdRepo, freebsdRepoList, freebsdNeedExtract, freebsdBinsLocation)
-		if err != nil {
-			log.Panicln(err)
-		}
-		// 配置初始化
-		*c = newConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation)
-
-		// 资源初始化
-		*r = newResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation)
-
-		// 服务初始化
-		*s = newService(freebsdServiceName, freebsdServiceContent)
-	}
-}
-
 // 安装
 func install(configFile string) (err error) {
 	// 配置装载内容
