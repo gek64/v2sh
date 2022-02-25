@@ -89,13 +89,13 @@ Example:
 	}
 
 	// 初始化
-	if cliLocalFile != "" {
-		initLocal()
-	} else {
+	if cliInstall && cliLocalFile == "" || cliUpdate && cliLocalFile == "" {
 		err := initNetwork()
 		if err != nil {
 			log.Panicln(err)
 		}
+	} else {
+		initLocal()
 	}
 }
 
