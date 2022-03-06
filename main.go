@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"gek_app"
 	"gek_toolbox"
 	"log"
 	"os"
@@ -22,14 +23,14 @@ var (
 )
 
 func init() {
-	flag.BoolVar(&cliInstall, "I", false, "install")
-	flag.BoolVar(&cliUninstall, "R", false, "uninstall")
-	flag.BoolVar(&cliUpdate, "U", false, "update")
-	flag.BoolVar(&cliReload, "r", false, "reload")
-	flag.BoolVar(&cliTest, "t", false, "test config")
-	flag.StringVar(&cliLocalFile, "l", "", "use local file without download from network")
+	flag.BoolVar(&cliInstall, "install", false, "install")
+	flag.BoolVar(&cliUninstall, "uninstall", false, "uninstall")
+	flag.BoolVar(&cliUpdate, "update", false, "update")
+	flag.BoolVar(&cliReload, "reload", false, "reload")
+	flag.BoolVar(&cliTest, "test", false, "test config")
+	flag.StringVar(&cliLocalFile, "l", "", "use local file without Download from network")
 	flag.StringVar(&cliConfig, "c", "", "use local config")
-	flag.BoolVar(&cliHelp, "h", false, "show help")
+	flag.BoolVar(&cliHelp, "help", false, "show help")
 	flag.BoolVar(&cliVersion, "v", false, "show version")
 	flag.Parse()
 
@@ -38,25 +39,25 @@ func init() {
 		var helpInfo = `Usage:
     proxyctl [Command] [Arguments]
 
-Arguments:
-	-l <bin.zip>      : use local file without download from network
-	-c <config.json>  : use local config
-
 Command:
-	-I                : install
-	-R                : uninstall
-	-U                : update
-	-r                : reload
-	-t                : test config
+	-install          : install
+	-uninstall        : uninstall
+	-update           : update
+	-reload           : reload
+	-test             : test config
 	-h                : show help
 	-v                : show version
 
+Arguments:
+	-l <bin.zip>      : use local file without Download from network
+	-c <config.json>  : use local config
+
 Example:
-1) proxyctl -I -l bins.zip -c config.json   : Install proxy and service
-2) proxyctl -U -l bins.zip -c config.json   : Update proxy and resources
-3) proxyctl -R                              : Uninstall proxy and service
-4) proxyctl -t -c config.json               : Test config
-5) proxyctl -r -c config.json               : Reload service`
+1) proxyctl -install   -c config.json -l bins.zip  : Install proxy and service
+2) proxyctl -update    -c config.json -l bins.zip  : Update proxy and resources
+3) proxyctl -uninstall                             : Uninstall proxy and service
+4) proxyctl -test      -c config.json              : Test config
+5) proxyctl -reload    -c config.json              : Reload service`
 		fmt.Println(helpInfo)
 	}
 
@@ -68,18 +69,18 @@ Example:
 
 	// 打印版本信息
 	if cliVersion {
-		fmt.Println("v2.02")
+		fmt.Println("v2.03")
 		os.Exit(0)
 	}
 
 	// 检查运行库是否完整
 	switch runtime.GOOS {
-	case supportedOS[0]:
+	case gek_app.SupportedOS[0]:
 		err := gek_toolbox.CheckToolbox(linuxToolbox)
 		if err != nil {
 			log.Panicln(err)
 		}
-	case supportedOS[1]:
+	case gek_app.SupportedOS[1]:
 		err := gek_toolbox.CheckToolbox(freebsdToolbox)
 		if err != nil {
 			log.Panicln(err)
@@ -108,7 +109,9 @@ func showChangelog() {
   2.01:
     - Add local file support
   2.02:
-    - Fix bug`
+    - Fix bug
+  2.03:
+    - Fix permission bug`
 	fmt.Println(versionInfo)
 }
 

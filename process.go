@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"gek_app"
 	"log"
 	"os"
 	"runtime"
@@ -12,13 +13,13 @@ func install(configFile string) (err error) {
 	// 配置装载内容
 	if configFile != "" {
 		switch runtime.GOOS {
-		case supportedOS[0]:
-			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+		case gek_app.SupportedOS[0]:
+			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
 			if err != nil {
 				return err
 			}
-		case supportedOS[1]:
-			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+		case gek_app.SupportedOS[1]:
+			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
 			if err != nil {
 				return err
 			}
@@ -26,22 +27,22 @@ func install(configFile string) (err error) {
 	}
 
 	// 应用安装
-	err = app.install()
+	err = app.Install()
 	if err != nil {
 		return err
 	}
 	// 配置安装
-	err = config.install()
+	err = config.Install()
 	if err != nil {
 		return err
 	}
 	// 资源安装
-	err = resources.install()
+	err = resources.Install()
 	if err != nil {
 		return err
 	}
 	// 服务安装
-	err = service.install()
+	err = service.Install()
 	if err != nil {
 		return err
 	}
@@ -60,13 +61,13 @@ func installFromLocal(configFile string, localFile string) (err error) {
 	// 配置装载内容
 	if configFile != "" {
 		switch runtime.GOOS {
-		case supportedOS[0]:
-			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+		case gek_app.SupportedOS[0]:
+			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
 			if err != nil {
 				return err
 			}
-		case supportedOS[1]:
-			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+		case gek_app.SupportedOS[1]:
+			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
 			if err != nil {
 				return err
 			}
@@ -74,12 +75,12 @@ func installFromLocal(configFile string, localFile string) (err error) {
 	}
 
 	// 应用安装
-	err = app.installFromLocal(localFile)
+	err = app.InstallFromLocal(localFile)
 	if err != nil {
 		return err
 	}
 	// 配置安装
-	err = config.install()
+	err = config.Install()
 	if err != nil {
 		return err
 	}
@@ -89,7 +90,7 @@ func installFromLocal(configFile string, localFile string) (err error) {
 		return err
 	}
 	// 服务安装
-	err = service.install()
+	err = service.Install()
 	if err != nil {
 		return err
 	}
@@ -100,22 +101,22 @@ func installFromLocal(configFile string, localFile string) (err error) {
 // 卸载
 func uninstall() (err error) {
 	// 停止应用+卸载服务
-	err = service.uninstall()
+	err = service.Uninstall()
 	if err != nil {
 		log.Println(err)
 	}
 	// 卸载配置文件
-	err = config.uninstall()
+	err = config.Uninstall()
 	if err != nil {
 		log.Println(err)
 	}
 	// 卸载资源
-	err = resources.uninstall()
+	err = resources.Uninstall()
 	if err != nil {
 		log.Println(err)
 	}
 	// 卸载应用
-	err = app.uninstall()
+	err = app.Uninstall()
 	if err != nil {
 		log.Println(err)
 	}
@@ -127,55 +128,55 @@ func uninstall() (err error) {
 func update(configFile string) (err error) {
 	if configFile != "" {
 		switch runtime.GOOS {
-		case supportedOS[0]:
+		case gek_app.SupportedOS[0]:
 			// 配置装载内容
-			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
 			if err != nil {
 				return err
 			}
-		case supportedOS[1]:
+		case gek_app.SupportedOS[1]:
 			// 配置装载内容
-			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
 			if err != nil {
 				return err
 			}
 		}
 		// 配置卸载
-		err = config.uninstall()
+		err = config.Uninstall()
 		if err != nil {
 			return err
 		}
 		// 配置安装
-		err = config.install()
+		err = config.Install()
 		if err != nil {
 			return err
 		}
 	}
 
 	// 应用卸载
-	err = app.uninstall()
+	err = app.Uninstall()
 	if err != nil {
 		return err
 	}
 	// 应用安装
-	err = app.install()
+	err = app.Install()
 	if err != nil {
 		return err
 	}
 
 	// 资源卸载
-	err = resources.uninstall()
+	err = resources.Uninstall()
 	if err != nil {
 		return err
 	}
 	// 资源安装
-	err = resources.install()
+	err = resources.Install()
 	if err != nil {
 		return err
 	}
 
 	// 服务重启
-	err = service.restart()
+	err = service.Restart()
 	if err != nil {
 		return err
 	}
@@ -193,44 +194,44 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 
 	if configFile != "" {
 		switch runtime.GOOS {
-		case supportedOS[0]:
+		case gek_app.SupportedOS[0]:
 			// 配置装载内容
-			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
 			if err != nil {
 				return err
 			}
-		case supportedOS[1]:
+		case gek_app.SupportedOS[1]:
 			// 配置装载内容
-			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
 			if err != nil {
 				return err
 			}
 		}
 		// 配置卸载
-		err = config.uninstall()
+		err = config.Uninstall()
 		if err != nil {
 			return err
 		}
 		// 配置安装
-		err = config.install()
+		err = config.Install()
 		if err != nil {
 			return err
 		}
 	}
 
 	// 应用卸载
-	err = app.uninstall()
+	err = app.Uninstall()
 	if err != nil {
 		return err
 	}
 	// 应用安装
-	err = app.installFromLocal(localFile)
+	err = app.InstallFromLocal(localFile)
 	if err != nil {
 		return err
 	}
 
 	// 资源卸载
-	err = resources.uninstall()
+	err = resources.Uninstall()
 	if err != nil {
 		return err
 	}
@@ -241,7 +242,7 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 	}
 
 	// 服务重启
-	err = service.restart()
+	err = service.Restart()
 	if err != nil {
 		return err
 	}
@@ -253,33 +254,33 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 func reload(configFile string) (err error) {
 	if configFile != "" {
 		switch runtime.GOOS {
-		case supportedOS[0]:
+		case gek_app.SupportedOS[0]:
 			// 配置装载内容
-			config, err = newConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
+			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigLocation)
 			if err != nil {
 				return err
 			}
-		case supportedOS[1]:
+		case gek_app.SupportedOS[1]:
 			// 配置装载内容
-			config, err = newConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
+			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigLocation)
 			if err != nil {
 				return err
 			}
 		}
 		// 配置卸载
-		err = config.uninstall()
+		err = config.Uninstall()
 		if err != nil {
 			return err
 		}
 		// 配置安装
-		err = config.install()
+		err = config.Install()
 		if err != nil {
 			return err
 		}
 	}
 
 	// 服务重启
-	err = service.restart()
+	err = service.Restart()
 	if err != nil {
 		return err
 	}
