@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"gek_app"
+	"gek_exec"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -30,12 +32,14 @@ func (r Resources) installFromLocal(localFile string) (err error) {
 	}
 
 	// 解压资源文件到资源安装路径
-	err = gek_app.Extract(localFile, r.Files, r.Location)
-	if err != nil {
-		return err
+	for _, file := range r.Files {
+		err = gek_exec.Run(exec.Command("unzip", "-o", "-d", r.Location, localFile, file))
+		if err != nil {
+			return err
+		}
 	}
 
-	// 赋权644
+	// 赋权0644
 	for _, file := range r.Files {
 		err = os.Chmod(filepath.Join(r.Location, file), 0644)
 		if err != nil {

@@ -6,10 +6,12 @@ import (
 )
 
 var (
-	app       Application
-	config    gek_app.Config
-	resources Resources
-	service   gek_app.Service
+	app         Application
+	config      gek_app.Config
+	resources   Resources
+	service     gek_app.Service
+	tempFolder  string = "/tmp/proxy"
+	needExtract bool   = true
 )
 
 func initNetwork() (err error) {
@@ -21,30 +23,30 @@ func initNetwork() (err error) {
 	switch runtime.GOOS {
 	case gek_app.SupportedOS[0]:
 		// 应用初始化
-		a.Application, err = gek_app.NewApplicationFromGithub(linuxBins, linuxRepo, linuxRepoList, linuxNeedExtract, linuxBinsLocation)
+		a.Application, err = gek_app.NewApplicationFromGithub(linuxBins, linuxRepo, linuxRepoList, linuxBinsLocation, linuxBinsUninstallDeleteLoaction, tempFolder)
 		if err != nil {
 			return err
 		}
 		// 配置初始化
-		*c = gek_app.NewConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation)
+		*c = gek_app.NewConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation, linuxConfigUninstallDeleteLoaction)
 
 		// 资源初始化
-		r.Resources = gek_app.NewResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation)
+		r.Resources = gek_app.NewResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation, linuxResourcesUninstallDeleteLoaction)
 
 		// 服务初始化
 		*s = gek_app.NewService(linuxServiceName, linuxServiceContent)
 
 	case gek_app.SupportedOS[1]:
 		// 应用初始化
-		a.Application, err = gek_app.NewApplicationFromGithub(freebsdBins, freebsdRepo, freebsdRepoList, freebsdNeedExtract, freebsdBinsLocation)
+		a.Application, err = gek_app.NewApplicationFromGithub(freebsdBins, freebsdRepo, freebsdRepoList, freebsdBinsLocation, freebsdBinsUninstallDeleteLoaction, tempFolder)
 		if err != nil {
 			return err
 		}
 		// 配置初始化
-		*c = gek_app.NewConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation)
+		*c = gek_app.NewConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation, freebsdConfigUninstallDeleteLoaction)
 
 		// 资源初始化
-		r.Resources = gek_app.NewResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation)
+		r.Resources = gek_app.NewResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation, freebsdResourcesUninstallDeleteLoaction)
 
 		// 服务初始化
 		*s = gek_app.NewService(freebsdServiceName, freebsdServiceContent)
@@ -62,26 +64,26 @@ func initLocal() {
 	switch runtime.GOOS {
 	case gek_app.SupportedOS[0]:
 		// 应用初始化
-		a.Application = gek_app.NewApplication(linuxBins, "", linuxNeedExtract, linuxBinsLocation)
+		a.Application = gek_app.NewApplication(linuxBins, "", linuxBinsLocation, linuxBinsUninstallDeleteLoaction)
 
 		// 配置初始化
-		*c = gek_app.NewConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation)
+		*c = gek_app.NewConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation, linuxConfigUninstallDeleteLoaction)
 
 		// 资源初始化
-		r.Resources = gek_app.NewResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation)
+		r.Resources = gek_app.NewResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation, linuxResourcesUninstallDeleteLoaction)
 
 		// 服务初始化
 		*s = gek_app.NewService(linuxServiceName, linuxServiceContent)
 
 	case gek_app.SupportedOS[1]:
 		// 应用初始化
-		a.Application = gek_app.NewApplication(freebsdBins, "", freebsdNeedExtract, freebsdBinsLocation)
+		a.Application = gek_app.NewApplication(freebsdBins, "", freebsdBinsLocation, freebsdBinsUninstallDeleteLoaction)
 
 		// 配置初始化
-		*c = gek_app.NewConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation)
+		*c = gek_app.NewConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation, freebsdConfigUninstallDeleteLoaction)
 
 		// 资源初始化
-		r.Resources = gek_app.NewResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation)
+		r.Resources = gek_app.NewResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation, freebsdResourcesUninstallDeleteLoaction)
 
 		// 服务初始化
 		*s = gek_app.NewService(freebsdServiceName, freebsdServiceContent)

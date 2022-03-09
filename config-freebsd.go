@@ -10,19 +10,21 @@ var (
 		"freebsd_386":   "v2ray-freebsd-32.zip",
 		"freebsd_amd64": "v2ray-freebsd-64.zip",
 	}
-	freebsdBins         = []string{"v2ray"}
-	freebsdBinsLocation = linuxBinsLocation
-	freebsdNeedExtract  = linuxNeedExtract
+	freebsdBins                        = []string{"v2ray"}
+	freebsdBinsLocation                = linuxBinsLocation
+	freebsdBinsUninstallDeleteLoaction = false
 
 	// 配置文件相关
-	freebsdConfigName     = linuxConfigName
-	freebsdConfigContent  = linuxConfigContent
-	freebsdConfigLocation = linuxConfigLocation
+	freebsdConfigName                    = linuxConfigName
+	freebsdConfigContent                 = linuxConfigContent
+	freebsdConfigLocation                = linuxConfigLocation
+	freebsdConfigUninstallDeleteLoaction = true
 
 	// 资源文件相关
-	freebsdResources         = linuxResources
-	freebsdResourcesUrl      = linuxResourcesUrl
-	freebsdResourcesLocation = linuxResourcesLocation
+	freebsdResources                        = linuxResources
+	freebsdResourcesUrl                     = linuxResourcesUrl
+	freebsdResourcesLocation                = linuxResourcesLocation
+	freebsdResourcesUninstallDeleteLoaction = true
 
 	// 服务相关
 	freebsdServiceName    = "v2ray"
@@ -45,22 +47,22 @@ command="/usr/local/bin/${name}"
 pidfile="/var/run/${name}.pid"
 
 start_cmd="${name}_start"
-stop_cmd="${name}_stop"
+#stop_cmd="${name}_stop"
 
 v2ray_start() {
   echo "Starting ${name}."
   /usr/sbin/daemon -cf -p ${pidfile} ${command} -confdir "/usr/local/etc/v2ray/"
 }
 
-v2ray_stop() {
-  echo "Stopping ${name}."
-  if [ -f ${pidfile} ]; then
-    pkill -F ${pidfile}
-    sleep 1
-  else
-    echo "Service ${name} has stopped."
-  fi
-}
+#v2ray_stop() {
+#  echo "Stopping ${name}."
+#  if [ -f ${pidfile} ]; then
+#    pkill -F ${pidfile}
+#    sleep 1
+#  else
+#    echo "Service ${name} has stopped."
+#  fi
+#}
 
 load_rc_config $name
 run_rc_command "$1"`

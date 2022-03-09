@@ -30,7 +30,7 @@ func init() {
 	flag.BoolVar(&cliTest, "test", false, "test config")
 	flag.StringVar(&cliLocalFile, "l", "", "use local file without Download from network")
 	flag.StringVar(&cliConfig, "c", "", "use local config")
-	flag.BoolVar(&cliHelp, "help", false, "show help")
+	flag.BoolVar(&cliHelp, "h", false, "show help")
 	flag.BoolVar(&cliVersion, "v", false, "show version")
 	flag.Parse()
 

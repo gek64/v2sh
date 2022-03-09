@@ -17,19 +17,21 @@ var (
 		"linux_mips64le": "v2ray-linux-mips64le.zip",
 		"linux_riscv64":  "v2ray-linux-riscv64.zip",
 	}
-	linuxBins         = []string{"v2ray", "v2ctl"}
-	linuxBinsLocation = "/usr/local/bin/"
-	linuxNeedExtract  = true
+	linuxBins                        = []string{"v2ray", "v2ctl"}
+	linuxBinsLocation                = "/usr/local/bin"
+	linuxBinsUninstallDeleteLoaction = false
 
 	// 配置文件相关
-	linuxConfigName     = "config.json"
-	linuxConfigContent  = "{}"
-	linuxConfigLocation = "/usr/local/etc/v2ray/"
+	linuxConfigName                    = "config.json"
+	linuxConfigContent                 = "{}"
+	linuxConfigLocation                = "/usr/local/etc/v2ray"
+	linuxConfigUninstallDeleteLoaction = true
 
 	// 资源文件相关
-	linuxResources         = []string{"geoip.dat", "geosite.dat"}
-	linuxResourcesUrl      = []string{"https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat", "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"}
-	linuxResourcesLocation = "/usr/local/share/v2ray/"
+	linuxResources                        = []string{"geoip.dat", "geosite.dat"}
+	linuxResourcesUrl                     = []string{"https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat", "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"}
+	linuxResourcesLocation                = "/usr/local/share/v2ray"
+	linuxResourcesUninstallDeleteLoaction = true
 
 	// 服务相关
 	linuxServiceName    = "v2ray.service"
