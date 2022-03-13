@@ -1,0 +1,38 @@
+#!/bin/sh
+# PROVIDE: v2ray
+# REQUIRE: DAEMON NETWORKING
+#
+# Install rc.d service use the following command on freebsd
+#
+# mkdir /usr/local/etc/rc.d/
+# ee /usr/local/etc/rc.d/v2ray && chmod +x /usr/local/etc/rc.d/v2ray
+# service v2ray enable && service v2ray start
+
+. /etc/rc.subr
+
+name=v2ray
+rcvar=${name}_enable
+
+command="/usr/local/bin/${name}"
+pidfile="/var/run/${name}.pid"
+
+start_cmd="${name}_start"
+#stop_cmd="${name}_stop"
+
+v2ray_start() {
+  echo "Starting ${name}."
+  /usr/sbin/daemon -cf -p ${pidfile} ${command} -confdir "/usr/local/etc/v2ray/"
+}
+
+#v2ray_stop() {
+#  echo "Stopping ${name}."
+#  if [ -f ${pidfile} ]; then
+#    pkill -F ${pidfile}
+#    sleep 1
+#  else
+#    echo "Service ${name} has stopped."
+#  fi
+#}
+
+load_rc_config $name
+run_rc_command "$1"

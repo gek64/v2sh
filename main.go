@@ -69,34 +69,32 @@ Example:
 
 	// 打印版本信息
 	if cliVersion {
-		fmt.Println("v2.03")
+		fmt.Println("v2.04")
 		os.Exit(0)
+	}
+
+	// 初始化
+	if cliInstall && cliLocalFile == "" || cliUpdate && cliLocalFile == "" {
+		err := initApp(false)
+		if err != nil {
+			log.Panicln(err)
+		}
+	} else {
+		err := initApp(true)
+		if err != nil {
+			log.Panicln(err)
+		}
 	}
 
 	// 检查运行库是否完整
 	switch runtime.GOOS {
-	case gek_app.SupportedOS[0]:
-		err := gek_toolbox.CheckToolbox(linuxToolbox)
-		if err != nil {
-			log.Panicln(err)
-		}
-	case gek_app.SupportedOS[1]:
-		err := gek_toolbox.CheckToolbox(freebsdToolbox)
+	case gek_app.SupportedOS[0], gek_app.SupportedOS[1]:
+		err := gek_toolbox.CheckToolbox(cc.Toolbox)
 		if err != nil {
 			log.Panicln(err)
 		}
 	default:
 		log.Panicf("%s is not supported", runtime.GOOS)
-	}
-
-	// 初始化
-	if cliInstall && cliLocalFile == "" || cliUpdate && cliLocalFile == "" {
-		err := initNetwork()
-		if err != nil {
-			log.Panicln(err)
-		}
-	} else {
-		initLocal()
 	}
 }
 
@@ -111,7 +109,9 @@ func showChangelog() {
   2.02:
     - Fix bug
   2.03:
-    - Fix permission bug`
+    - Fix permission bug
+  2.04:
+    - Embedded configuration file and service file`
 	fmt.Println(versionInfo)
 }
 

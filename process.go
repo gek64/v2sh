@@ -5,24 +5,15 @@ import (
 	"gek_app"
 	"log"
 	"os"
-	"runtime"
 )
 
 // 安装
 func install(configFile string) (err error) {
 	// 配置装载内容
 	if configFile != "" {
-		switch runtime.GOOS {
-		case gek_app.SupportedOS[0]:
-			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigUninstallDeleteLoaction, linuxConfigLocation)
-			if err != nil {
-				return err
-			}
-		case gek_app.SupportedOS[1]:
-			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigUninstallDeleteLoaction, freebsdConfigLocation)
-			if err != nil {
-				return err
-			}
+		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -60,17 +51,9 @@ func installFromLocal(configFile string, localFile string) (err error) {
 
 	// 配置装载内容
 	if configFile != "" {
-		switch runtime.GOOS {
-		case gek_app.SupportedOS[0]:
-			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigUninstallDeleteLoaction, linuxConfigLocation)
-			if err != nil {
-				return err
-			}
-		case gek_app.SupportedOS[1]:
-			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigUninstallDeleteLoaction, freebsdConfigLocation)
-			if err != nil {
-				return err
-			}
+		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -127,19 +110,10 @@ func uninstall() (err error) {
 // 更新
 func update(configFile string) (err error) {
 	if configFile != "" {
-		switch runtime.GOOS {
-		case gek_app.SupportedOS[0]:
-			// 配置装载内容
-			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigUninstallDeleteLoaction, linuxConfigLocation)
-			if err != nil {
-				return err
-			}
-		case gek_app.SupportedOS[1]:
-			// 配置装载内容
-			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigUninstallDeleteLoaction, freebsdConfigLocation)
-			if err != nil {
-				return err
-			}
+		// 配置装载内容
+		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		if err != nil {
+			return err
 		}
 		// 配置卸载
 		err = config.Uninstall()
@@ -193,19 +167,10 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 	}
 
 	if configFile != "" {
-		switch runtime.GOOS {
-		case gek_app.SupportedOS[0]:
-			// 配置装载内容
-			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigUninstallDeleteLoaction, linuxConfigLocation)
-			if err != nil {
-				return err
-			}
-		case gek_app.SupportedOS[1]:
-			// 配置装载内容
-			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigUninstallDeleteLoaction, freebsdConfigLocation)
-			if err != nil {
-				return err
-			}
+		// 配置装载内容
+		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		if err != nil {
+			return err
 		}
 		// 配置卸载
 		err = config.Uninstall()
@@ -253,19 +218,10 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 // 重载
 func reload(configFile string) (err error) {
 	if configFile != "" {
-		switch runtime.GOOS {
-		case gek_app.SupportedOS[0]:
-			// 配置装载内容
-			config, err = gek_app.NewConfigFromFile(linuxConfigName, configFile, linuxConfigUninstallDeleteLoaction, linuxConfigLocation)
-			if err != nil {
-				return err
-			}
-		case gek_app.SupportedOS[1]:
-			// 配置装载内容
-			config, err = gek_app.NewConfigFromFile(freebsdConfigName, configFile, freebsdConfigUninstallDeleteLoaction, freebsdConfigLocation)
-			if err != nil {
-				return err
-			}
+		// 配置装载内容
+		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		if err != nil {
+			return err
 		}
 		// 配置卸载
 		err = config.Uninstall()

@@ -6,86 +6,57 @@ import (
 )
 
 var (
-	app         Application
+	app         App
 	config      gek_app.Config
-	resources   Resources
+	resources   Res
 	service     gek_app.Service
 	tempFolder  string = "/tmp/proxy"
 	needExtract bool   = true
+	cc          CC
 )
 
-func initNetwork() (err error) {
+func initApp(local bool) (err error) {
 	var a = &app
 	var c = &config
 	var r = &resources
 	var s = &service
 
+	err = initConf()
+	if err != nil {
+		return err
+	}
+
+	// 应用初始化
+	if local {
+		a.Application = gek_app.NewApplication(cc.Application.File, "", cc.Application.Location, cc.Application.UninstallDeleteLocation)
+	} else {
+		a.Application, err = gek_app.NewApplicationFromGithub(cc.Application.File, cc.Application.Repo, cc.Application.RepoList, cc.Application.Location, cc.Application.UninstallDeleteLocation, tempFolder)
+		if err != nil {
+			return err
+		}
+	}
+
+	// 配置初始化
+	*c = gek_app.NewConfig(cc.Config.Name, cc.Config.Content, cc.Config.Location, cc.Config.UninstallDeleteLocation)
+
+	// 资源初始化
+	r.Resources = gek_app.NewResources(cc.Resources.File, cc.Resources.URL, cc.Resources.Location, cc.Application.UninstallDeleteLocation)
+
+	// 服务初始化
 	switch runtime.GOOS {
 	case gek_app.SupportedOS[0]:
-		// 应用初始化
-		a.Application, err = gek_app.NewApplicationFromGithub(linuxBins, linuxRepo, linuxRepoList, linuxBinsLocation, linuxBinsUninstallDeleteLoaction, tempFolder)
+		bytes, err := container.ReadFile("service/v2ray.service")
 		if err != nil {
 			return err
 		}
-		// 配置初始化
-		*c = gek_app.NewConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation, linuxConfigUninstallDeleteLoaction)
-
-		// 资源初始化
-		r.Resources = gek_app.NewResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation, linuxResourcesUninstallDeleteLoaction)
-
-		// 服务初始化
-		*s = gek_app.NewService(linuxServiceName, linuxServiceContent)
-
+		*s = gek_app.NewService(cc.Service.Name, string(bytes))
 	case gek_app.SupportedOS[1]:
-		// 应用初始化
-		a.Application, err = gek_app.NewApplicationFromGithub(freebsdBins, freebsdRepo, freebsdRepoList, freebsdBinsLocation, freebsdBinsUninstallDeleteLoaction, tempFolder)
+		bytes, err := container.ReadFile("service/v2ray")
 		if err != nil {
 			return err
 		}
-		// 配置初始化
-		*c = gek_app.NewConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation, freebsdConfigUninstallDeleteLoaction)
-
-		// 资源初始化
-		r.Resources = gek_app.NewResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation, freebsdResourcesUninstallDeleteLoaction)
-
-		// 服务初始化
-		*s = gek_app.NewService(freebsdServiceName, freebsdServiceContent)
+		*s = gek_app.NewService(cc.Service.Name, string(bytes))
 	}
 
 	return nil
-}
-
-func initLocal() {
-	var a = &app
-	var c = &config
-	var r = &resources
-	var s = &service
-
-	switch runtime.GOOS {
-	case gek_app.SupportedOS[0]:
-		// 应用初始化
-		a.Application = gek_app.NewApplication(linuxBins, "", linuxBinsLocation, linuxBinsUninstallDeleteLoaction)
-
-		// 配置初始化
-		*c = gek_app.NewConfig(linuxConfigName, linuxConfigContent, linuxConfigLocation, linuxConfigUninstallDeleteLoaction)
-
-		// 资源初始化
-		r.Resources = gek_app.NewResources(linuxResources, linuxResourcesUrl, linuxResourcesLocation, linuxResourcesUninstallDeleteLoaction)
-
-		// 服务初始化
-		*s = gek_app.NewService(linuxServiceName, linuxServiceContent)
-
-	case gek_app.SupportedOS[1]:
-		// 应用初始化
-		a.Application = gek_app.NewApplication(freebsdBins, "", freebsdBinsLocation, freebsdBinsUninstallDeleteLoaction)
-
-		// 配置初始化
-		*c = gek_app.NewConfig(freebsdConfigName, freebsdConfigContent, freebsdConfigLocation, freebsdConfigUninstallDeleteLoaction)
-
-		// 资源初始化
-		r.Resources = gek_app.NewResources(freebsdResources, freebsdResourcesUrl, freebsdResourcesLocation, freebsdResourcesUninstallDeleteLoaction)
-
-		// 服务初始化
-		*s = gek_app.NewService(freebsdServiceName, freebsdServiceContent)
-	}
 }
