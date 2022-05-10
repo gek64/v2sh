@@ -3,17 +3,21 @@ package main
 import (
 	"fmt"
 	"gek_app"
+	"gek_downloader"
 	"gek_exec"
+	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 )
 
 type Res struct {
 	gek_app.Resources
 }
 
-// 安装资源(从本地文件解压,无需网络下载)
+// 解压安装本地资源压缩文件
 func (r Res) installFromLocalArchiveFile(localFile string) (err error) {
 	// 检查本地文件是否存在
 	_, err = os.Stat(localFile)
@@ -48,4 +52,42 @@ func (r Res) installFromLocalArchiveFile(localFile string) (err error) {
 	}
 
 	return nil
+}
+
+// 下载资源压缩文件并解压安装
+func (r Res) installFromInternetArchiveFile(url string, tempLocation string) (err error) {
+	// 检查临时文件夹是否存在
+	_, err = os.Stat(tempLocation)
+	if os.IsNotExist(err) {
+		appTemp := gek_app.NewTemp(tempLocation)
+		err = appTemp.Create()
+		if err != nil {
+			return err
+		}
+
+		defer func(appTemp gek_app.Temp) {
+			err := appTemp.Delete()
+			if err != nil {
+				log.Panicln(err)
+			}
+		}(appTemp)
+	}
+
+	// 下载资源压缩文件
+	err = gek_downloader.Downloader(url, tempLocation, "")
+	if err != nil {
+		return err
+	}
+
+	// 解压下载的资源压缩文件,到资源安装路径
+	fileInfo, err := ioutil.ReadDir(tempLocation)
+	if err != nil {
+		return err
+	}
+	for _, f := range fileInfo {
+		if strings.Contains(f.Name(), ".zip") {
+			return r.installFromLocalArchiveFile(filepath.Join(tempLocation, f.Name()))
+		}
+	}
+	return fmt.Errorf("can't find archive file")
 }
