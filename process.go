@@ -27,8 +27,8 @@ func install(configFile string) (err error) {
 	if err != nil {
 		return err
 	}
-	// 资源安装
-	err = resources.Install()
+	// 资源安装,从互联网安装时使用resources.Install()
+	err = resources.InstallFromLocation(tempFolder)
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func installFromLocal(configFile string, localFile string) (err error) {
 		return err
 	}
 	// 资源安装
-	err = resources.installFromLocal(localFile)
+	err = resources.installFromLocalArchiveFile(localFile)
 	if err != nil {
 		return err
 	}
@@ -144,7 +144,7 @@ func update(configFile string) (err error) {
 		return err
 	}
 	// 资源安装
-	err = resources.Install()
+	err = resources.InstallFromInternet()
 	if err != nil {
 		return err
 	}
@@ -201,7 +201,7 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 		return err
 	}
 	// 资源安装
-	err = resources.installFromLocal(localFile)
+	err = resources.installFromLocalArchiveFile(localFile)
 	if err != nil {
 		return err
 	}

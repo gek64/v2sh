@@ -10,8 +10,8 @@ var (
 	config      gek_app.Config
 	resources   Res
 	service     gek_app.Service
-	tempFolder  string = "/tmp/proxy"
-	needExtract bool   = true
+	tempFolder  = "/tmp/proxy"
+	needExtract = true
 	cc          CC
 )
 

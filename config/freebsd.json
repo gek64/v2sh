@@ -27,8 +27,6 @@
       "geosite.dat"
     ],
     "url": [
-      "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
-      "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
     ],
     "location": "/usr/local/share/v2ray",
     "uninstallDeleteLocation": true

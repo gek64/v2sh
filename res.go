@@ -14,7 +14,7 @@ type Res struct {
 }
 
 // 安装资源(从本地文件解压,无需网络下载)
-func (r Res) installFromLocal(localFile string) (err error) {
+func (r Res) installFromLocalArchiveFile(localFile string) (err error) {
 	// 检查本地文件是否存在
 	_, err = os.Stat(localFile)
 	if os.IsNotExist(err) {
