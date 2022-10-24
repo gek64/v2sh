@@ -22,9 +22,9 @@ func (a App) test(configFile string) (err error) {
 
 	// 分系统运行不同的命令
 	if configFile != "" {
-		err = gek_exec.Run(exec.Command(app, "-test", "-config", configFile))
+		err = gek_exec.Run(exec.Command(app, "test", "-config", configFile))
 	} else {
-		err = gek_exec.Run(exec.Command(app, "-test", "-confdir", cc.Config.Location))
+		err = gek_exec.Run(exec.Command(app, "test", "-confdir", cc.Config.Location))
 	}
 
 	return err

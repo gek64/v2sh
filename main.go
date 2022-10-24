@@ -69,7 +69,7 @@ Example:
 
 	// 打印版本信息
 	if cliVersion {
-		fmt.Println("v2.05")
+		fmt.Println("v2.06")
 		os.Exit(0)
 	}
 
@@ -113,7 +113,9 @@ func showChangelog() {
   2.04:
     - Embedded configuration file and service file
   2.05:
-    - Use default resources from archive file`
+    - Use default resources from archive file
+  2.06:
+    - Support proxy version 5`
 	fmt.Println(versionInfo)
 }
 
