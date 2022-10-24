@@ -18,8 +18,7 @@
       "linux_riscv64": "v2ray-linux-riscv64.zip"
     },
     "file": [
-      "v2ray",
-      "v2ctl"
+      "v2ray"
     ],
     "location": "/usr/local/bin",
     "uninstallDeleteLocation": false
