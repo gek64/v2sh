@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gek_app"
-	"gek_downloader"
-	"gek_exec"
+	"github.com/gek64/gek/gApp"
+	"github.com/gek64/gek/gDownloader"
+	"github.com/gek64/gek/gExec"
 	"io/ioutil"
 	"log"
 	"os"
@@ -14,7 +14,7 @@ import (
 )
 
 type Res struct {
-	gek_app.Resources
+	gApp.Resources
 }
 
 // 解压安装本地资源压缩文件
@@ -37,7 +37,7 @@ func (r Res) installFromLocalArchiveFile(localFile string) (err error) {
 
 	// 解压资源文件到资源安装路径
 	for _, file := range r.Files {
-		err = gek_exec.Run(exec.Command("unzip", "-o", "-d", r.Location, localFile, file))
+		err = gExec.Run(exec.Command("unzip", "-o", "-d", r.Location, localFile, file))
 		if err != nil {
 			return err
 		}
@@ -59,13 +59,13 @@ func (r Res) installFromInternetArchiveFile(url string, tempLocation string) (er
 	// 检查临时文件夹是否存在
 	_, err = os.Stat(tempLocation)
 	if os.IsNotExist(err) {
-		appTemp := gek_app.NewTemp(tempLocation)
+		appTemp := gApp.NewTemp(tempLocation)
 		err = appTemp.Create()
 		if err != nil {
 			return err
 		}
 
-		defer func(appTemp gek_app.Temp) {
+		defer func(appTemp gApp.Temp) {
 			err := appTemp.Delete()
 			if err != nil {
 				log.Panicln(err)
@@ -74,7 +74,7 @@ func (r Res) installFromInternetArchiveFile(url string, tempLocation string) (er
 	}
 
 	// 下载资源压缩文件
-	err = gek_downloader.Downloader(url, tempLocation, "")
+	err = gDownloader.Downloader(url, tempLocation, "")
 	if err != nil {
 		return err
 	}

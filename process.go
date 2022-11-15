@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"gek_app"
+	"github.com/gek64/gek/gApp"
 	"log"
 	"os"
 )
@@ -11,7 +11,7 @@ import (
 func install(configFile string) (err error) {
 	// 配置装载内容
 	if configFile != "" {
-		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		config, err = gApp.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
 		if err != nil {
 			return err
 		}
@@ -53,7 +53,7 @@ func installFromLocal(configFile string, localFile string) (err error) {
 
 	// 配置装载内容
 	if configFile != "" {
-		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		config, err = gApp.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
 		if err != nil {
 			return err
 		}
@@ -113,7 +113,7 @@ func uninstall() (err error) {
 func update(configFile string) (err error) {
 	if configFile != "" {
 		// 配置装载内容
-		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		config, err = gApp.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
 		if err != nil {
 			return err
 		}
@@ -170,7 +170,7 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 
 	if configFile != "" {
 		// 配置装载内容
-		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		config, err = gApp.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
 		if err != nil {
 			return err
 		}
@@ -221,7 +221,7 @@ func updateFromLocal(configFile string, localFile string) (err error) {
 func reload(configFile string) (err error) {
 	if configFile != "" {
 		// 配置装载内容
-		config, err = gek_app.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
+		config, err = gApp.NewConfigFromFile(cc.Config.Name, configFile, cc.Config.UninstallDeleteLocation, cc.Config.Location)
 		if err != nil {
 			return err
 		}

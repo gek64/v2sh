@@ -3,7 +3,7 @@ package main
 import (
 	"embed"
 	"encoding/json"
-	"gek_app"
+	"github.com/gek64/gek/gApp"
 	"runtime"
 )
 
@@ -39,12 +39,13 @@ type Service struct {
 }
 
 // 存储配置文件及服务文件
+//
 //go:embed config/* service/*
 var container embed.FS
 
 func initConf() (err error) {
 	switch runtime.GOOS {
-	case gek_app.SupportedOS[0]:
+	case gApp.SupportedOS[0]:
 		bytes, err := container.ReadFile("config/linux.json")
 		if err != nil {
 			return err
@@ -53,7 +54,7 @@ func initConf() (err error) {
 		if err != nil {
 			return err
 		}
-	case gek_app.SupportedOS[1]:
+	case gApp.SupportedOS[1]:
 		bytes, err := container.ReadFile("config/freebsd.json")
 		if err != nil {
 			return err
