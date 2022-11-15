@@ -1,0 +1,38 @@
+{
+  "toolbox": [
+    "unzip",
+    "service"
+  ],
+  "application": {
+    "repo": "v2fly/v2ray-core",
+    "repoList": {
+      "freebsd_386": "v2ray-freebsd-32.zip",
+      "freebsd_amd64": "v2ray-freebsd-64.zip"
+    },
+    "file": [
+      "v2ray"
+    ],
+    "location": "/usr/local/bin",
+    "uninstallDeleteLocation": false
+  },
+  "config": {
+    "name": "config.json",
+    "content": "{}",
+    "location": "/usr/local/etc/v2ray",
+    "uninstallDeleteLocation": true
+  },
+  "resources": {
+    "file": [
+      "geoip.dat",
+      "geosite.dat"
+    ],
+    "url": [
+    ],
+    "location": "/usr/local/share/v2ray",
+    "uninstallDeleteLocation": true
+  },
+  "service": {
+    "name": "v2ray",
+    "content": ""
+  }
+}

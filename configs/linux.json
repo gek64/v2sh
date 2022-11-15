@@ -1,0 +1,46 @@
+{
+  "toolbox": [
+    "unzip",
+    "service",
+    "systemd"
+  ],
+  "application": {
+    "repo": "v2fly/v2ray-core",
+    "repoList": {
+      "linux_386": "v2ray-linux-32.zip",
+      "linux_amd64": "v2ray-linux-64.zip",
+      "linux_arm": "v2ray-linux-arm32-v7a.zip ",
+      "linux_arm64": "v2ray-linux-arm64-v8a.zip",
+      "linux_mips": "v2ray-linux-mips32.zip",
+      "linux_mips64": "v2ray-linux-mips64.zip",
+      "linux_mipsle": "v2ray-linux-mips32le.zip",
+      "linux_mips64le": "v2ray-linux-mips64le.zip",
+      "linux_riscv64": "v2ray-linux-riscv64.zip"
+    },
+    "file": [
+      "v2ray"
+    ],
+    "location": "/usr/local/bin",
+    "uninstallDeleteLocation": false
+  },
+  "config": {
+    "name": "config.json",
+    "content": "{}",
+    "location": "/usr/local/etc/v2ray",
+    "uninstallDeleteLocation": true
+  },
+  "resources": {
+    "file": [
+      "geoip.dat",
+      "geosite.dat"
+    ],
+    "url": [
+    ],
+    "location": "/usr/local/share/v2ray",
+    "uninstallDeleteLocation": true
+  },
+  "service": {
+    "name": "v2ray.service",
+    "content": ""
+  }
+}

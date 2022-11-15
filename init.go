@@ -45,13 +45,13 @@ func initApp(local bool) (err error) {
 	// 服务初始化
 	switch runtime.GOOS {
 	case gApp.SupportedOS[0]:
-		bytes, err := container.ReadFile("service/v2ray.service")
+		bytes, err := container.ReadFile("configs/v2ray.service")
 		if err != nil {
 			return err
 		}
 		*s = gApp.NewService(cc.Service.Name, string(bytes))
 	case gApp.SupportedOS[1]:
-		bytes, err := container.ReadFile("service/v2ray")
+		bytes, err := container.ReadFile("configs/v2ray")
 		if err != nil {
 			return err
 		}

@@ -40,13 +40,13 @@ type Service struct {
 
 // 存储配置文件及服务文件
 //
-//go:embed config/* service/*
+//go:embed configs/*
 var container embed.FS
 
 func initConf() (err error) {
 	switch runtime.GOOS {
 	case gApp.SupportedOS[0]:
-		bytes, err := container.ReadFile("config/linux.json")
+		bytes, err := container.ReadFile("configs/linux.json")
 		if err != nil {
 			return err
 		}
@@ -55,7 +55,7 @@ func initConf() (err error) {
 			return err
 		}
 	case gApp.SupportedOS[1]:
-		bytes, err := container.ReadFile("config/freebsd.json")
+		bytes, err := container.ReadFile("configs/freebsd.json")
 		if err != nil {
 			return err
 		}
