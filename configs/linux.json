@@ -1,8 +1,7 @@
 {
   "toolbox": [
     "unzip",
-    "service",
-    "systemd"
+    "service"
   ],
   "application": {
     "repo": "v2fly/v2ray-core",
