@@ -69,7 +69,7 @@ Example:
 
     // 打印版本信息
     if cliVersion {
-        fmt.Println("v2.07")
+        fmt.Println("v2.08")
         os.Exit(0)
     }
 
@@ -117,6 +117,8 @@ func showChangelog() {
   2.06:
     - Support proxy version 5
   2.07:
+    - Update package gek
+  2.08:
     - Update package gek`
     fmt.Println(versionInfo)
 }
