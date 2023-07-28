@@ -57,7 +57,7 @@ func initConf() (err error) {
         case gApp.InitSystem["systemd"]:
             configPath = "configs/linux_systemd.json"
         case gApp.InitSystem["openrc"]:
-            return fmt.Errorf("openrc does not yet support")
+            configPath = "configs/linux_openrc.json"
         default:
             var supportInitSystemListString string
             for key := range gApp.InitSystem {

@@ -54,7 +54,11 @@ func initApp(local bool) (err error) {
         }
         *s = gApp.NewService(cc.Service.Name, string(bytes))
     case gApp.InitSystem["openrc"]:
-        return fmt.Errorf("openrc does not yet support")
+        bytes, err := container.ReadFile("configs/v2ray.openrc")
+        if err != nil {
+            return err
+        }
+        *s = gApp.NewService(cc.Service.Name, string(bytes))
     case gApp.InitSystem["rc.d"]:
         bytes, err := container.ReadFile("configs/v2ray.rcd")
         if err != nil {
