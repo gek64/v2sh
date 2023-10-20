@@ -28,12 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup golang
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v4
         with:
-          go-version: '^1.19'
+          go-version: '^1.20'
 
       - name: Build
         run: |
@@ -61,7 +61,7 @@ jobs:
           echo "$(go run . -v)" > bin/version.txt
 
       - name: Remove old Releases
-        uses: dev-drprasad/delete-older-releases@v0.2.0
+        uses: dev-drprasad/delete-older-releases@v0.3.2
         with:
           keep_latest: 0
           delete_tags: true
@@ -69,7 +69,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: build_files
           path: bin/*
@@ -79,7 +79,7 @@ jobs:
     needs: build
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: gek64/build-apps-scripts
           token: ${{ secrets.RELEASE_KEY }}
