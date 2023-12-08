@@ -66,7 +66,7 @@ jobs:
           "${{ github.workspace }}/gobd_runner" -os linux -d bin -no_debug -no_cgo
           "${{ github.workspace }}/gobd_runner" -os linux -arch mipsle -n ${{ github.event.repository.name }}-softfloat -d bin -no_debug -no_cgo -envs 'GOMIPS=softfloat'
           "${{ github.workspace }}/gobd_runner" -os freebsd -d bin -no_debug -no_cgo
-
+          
           # 获取sha256 checksum
           sha256sum bin/* > bin/SHA256SUMS.txt
 
@@ -79,6 +79,38 @@ jobs:
           generateReleaseNotes: true
           removeArtifacts: true
           replacesArtifacts: true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_files
+          path: bin/*
+
+  job2:
+    runs-on: ubuntu-latest
+    needs: job1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: gek64/build-apps-scripts
+          token: ${{ secrets.RELEASE_KEY }}
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build_files
+          path: bin
+
+      - name: Push Release to Public Repo
+        run: |
+          rm -rf proxyctl
+          mv bin proxyctl
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git add -A
+          git commit -m $(date +"%Y%m%d")
+          git push origin $GITHUB_REF
 
       - name: Remove old artifacts
         uses: c-hive/gha-remove-artifacts@v1
