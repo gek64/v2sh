@@ -1,11 +1,12 @@
 #!/sbin/openrc-run
-# https://github.com/OpenRC/openrc/blob/master/service-script-guide.md
+
+export V2RAY_LOCATION_ASSET=/usr/local/etc/v2ray
 
 command="/usr/local/bin/v2ray"
-command_args="run -confdir /usr/local/etc/v2ray/"
+command_args="run -config /usr/local/etc/v2ray/config.json"
 command_background=true
 command_user="root"
-pidfile="/run/${RC_SVCNAME}.pid"
+pidfile="/run/\${RC_SVCNAME}.pid"
 
 depend() {
   need net
