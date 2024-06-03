@@ -3,19 +3,16 @@
 # REQUIRE: DAEMON NETWORKING
 
 . /etc/rc.subr
+
+export V2RAY_LOCATION_ASSET=/usr/local/etc/v2ray
+
 name=v2ray
 rcvar=${name}_enable
 command="/usr/local/bin/${name}"
 pidfile="/var/run/${name}.pid"
 start_cmd="${name}_start"
-
-# env
-V2RAY_LOCATION_ASSET="/usr/local/etc/v2ray"
-
 v2ray_start() {
-  echo "Starting ${name}."
   /usr/sbin/daemon -cf -p ${pidfile} ${command} run -config /usr/local/etc/v2ray/config.json
 }
-
 load_rc_config $name
-run_rc_command "$1"
+run_rc_command $1

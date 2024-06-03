@@ -29,7 +29,11 @@ func main() {
 				},
 			},
 			Action: func(ctx *cli.Context) (err error) {
-				err = installBinaryFile(local)
+				err = downloadBinaryFile(local)
+				if err != nil {
+					return err
+				}
+				err = installBinaryFile()
 				if err != nil {
 					return err
 				}
@@ -109,7 +113,7 @@ func main() {
 
 	app := &cli.App{
 		Usage:    "v2ray quick install tool",
-		Version:  "v3.01",
+		Version:  "v3.02",
 		Commands: cmds,
 	}
 
