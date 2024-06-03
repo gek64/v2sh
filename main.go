@@ -9,6 +9,7 @@ import (
 
 func main() {
 	var config string
+	var local string
 
 	cmds := []*cli.Command{
 		{
@@ -21,9 +22,14 @@ func main() {
 					Aliases:     []string{"c"},
 					Destination: &config,
 				},
+				&cli.StringFlag{
+					Name:        "local",
+					Aliases:     []string{"l"},
+					Destination: &local,
+				},
 			},
 			Action: func(ctx *cli.Context) (err error) {
-				err = installBinaryFile()
+				err = installBinaryFile(local)
 				if err != nil {
 					return err
 				}
@@ -54,9 +60,14 @@ func main() {
 					Aliases:     []string{"c"},
 					Destination: &config,
 				},
+				&cli.StringFlag{
+					Name:        "local",
+					Aliases:     []string{"l"},
+					Destination: &local,
+				},
 			},
 			Action: func(ctx *cli.Context) (err error) {
-				err = updateBinaryFile()
+				err = updateBinaryFile(local)
 				if err != nil {
 					return err
 				}
@@ -98,7 +109,7 @@ func main() {
 
 	app := &cli.App{
 		Usage:    "v2ray quick install tool",
-		Version:  "v2.00",
+		Version:  "v3.01",
 		Commands: cmds,
 	}
 

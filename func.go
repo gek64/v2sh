@@ -10,14 +10,27 @@ import (
 )
 
 // 可执行文件操作
-func installBinaryFile() (err error) {
-	downloadURL, err := GetDownloadURL()
-	if err != nil {
-		return err
-	}
-	err = gDownloader.Download(downloadURL, filepath.Join(os.TempDir(), "v2ray.zip"), "")
-	if err != nil {
-		return err
+func installBinaryFile(localArchiveFile string) (err error) {
+	if localArchiveFile != "" {
+		// 使用本地文件
+		bytes, err := os.ReadFile(localArchiveFile)
+		if err != nil {
+			return err
+		}
+		err = os.WriteFile(filepath.Join(os.TempDir(), "v2ray.zip"), bytes, 0644)
+		if err != nil {
+			return err
+		}
+	} else {
+		// 从网络下载
+		downloadURL, err := GetDownloadURL()
+		if err != nil {
+			return err
+		}
+		err = gDownloader.Download(downloadURL, filepath.Join(os.TempDir(), "v2ray.zip"), "")
+		if err != nil {
+			return err
+		}
 	}
 
 	if runtime.GOOS != "windows" {
@@ -48,7 +61,7 @@ func uninstallBinaryFile() (err error) {
 	}
 	return os.RemoveAll("/usr/local/bin/v2ray")
 }
-func updateBinaryFile() (err error) {
+func updateBinaryFile(localArchiveFile string) (err error) {
 	// 服务初始化
 	s, err := initService()
 	if err != nil {
@@ -60,7 +73,7 @@ func updateBinaryFile() (err error) {
 		return err
 	}
 	// 执行新的二进制文件安装
-	err = installBinaryFile()
+	err = installBinaryFile(localArchiveFile)
 	if err != nil {
 		return err
 	}
