@@ -1,11 +1,11 @@
 ```
- ▄▄   ▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄▄▄▄▄ ▄▄   ▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄
-█  █ █  █       █   ▄  █ █      █  █ █  █       █       █   █
-█  █▄█  █▄▄▄▄   █  █ █ █ █  ▄   █  █▄█  █       █▄     ▄█   █
-█       █▄▄▄▄█  █   █▄▄█▄█ █▄█  █       █     ▄▄█ █   █ █   █
-█       █ ▄▄▄▄▄▄█    ▄▄  █      █▄     ▄█    █    █   █ █   █▄▄▄
- █     ██ █▄▄▄▄▄█   █  █ █  ▄   █ █   █ █    █▄▄  █   █ █       █
-  █▄▄▄█ █▄▄▄▄▄▄▄█▄▄▄█  █▄█▄█ █▄▄█ █▄▄▄█ █▄▄▄▄▄▄▄█ █▄▄▄█ █▄▄▄▄▄▄▄█
+ ▄▄   ▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄   ▄▄ 
+█  █ █  █       █       █  █ █  █
+█  █▄█  █▄▄▄▄   █  ▄▄▄▄▄█  █▄█  █
+█       █▄▄▄▄█  █ █▄▄▄▄▄█       █
+█       █ ▄▄▄▄▄▄█▄▄▄▄▄  █   ▄   █
+ █     ██ █▄▄▄▄▄ ▄▄▄▄▄█ █  █ █  █
+  █▄▄▄█ █▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄█ █▄▄█
 ```
 
 - Make `v2ray` easier to install, uninstall and reload
@@ -16,10 +16,10 @@
 
 ```
 NAME:
-   v2rayctl - v2ray quick install tool
+   v2sh - v2ray quick install tool
 
 USAGE:
-   v2rayctl [global options] command [command options] 
+   v2sh [global options] command [command options] 
 
 VERSION:
    v3.01
@@ -41,20 +41,20 @@ GLOBAL OPTIONS:
 ```sh
 # For example, the host is a linux kernel based system with amd64 architecture
 # Download the app
-curl -Lo /usr/local/bin/v2rayctl https://github.com/gek64/v2rayctl/releases/latest/download/v2rayctl-linux-amd64
+curl -Lo /usr/local/bin/v2sh https://github.com/gek64/v2sh/releases/latest/download/v2sh-linux-amd64
 # Give the app execute permission
-chmod +x /usr/local/bin/v2rayctl
+chmod +x /usr/local/bin/v2sh
 # Show help
-/usr/local/bin/v2rayctl -h
+/usr/local/bin/v2sh -h
 ```
 
 ## Compile
 
 ```sh
 # Download application source code
-git clone https://github.com/gek64/v2rayctl.git
+git clone https://github.com/gek64/v2sh.git
 # Compile the source code
-cd v2rayctl
+cd v2sh
 export CGO_ENABLED=0
 go build -v -trimpath -ldflags "-s -w"
 ```

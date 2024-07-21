@@ -1,9 +1,9 @@
-module v2rayctl
+module v2sh
 
 go 1.22.3
 
 require (
-	github.com/gek64/gek v1.1.2-0.20240531071258-dc47e11bf978
+	github.com/gek64/gek v1.1.3-0.20240627090940-b552e88adf02
 	github.com/urfave/cli/v2 v2.27.2
 )
 
