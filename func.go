@@ -10,7 +10,7 @@ import (
 )
 
 // 可执行文件操作
-func downloadBinaryFile(localArchiveFile string) (err error) {
+func downloadBinaryFile(localArchiveFile string, tagName string) (err error) {
 	if localArchiveFile != "" {
 		// 使用本地文件
 		bytes, err := os.ReadFile(localArchiveFile)
@@ -21,7 +21,7 @@ func downloadBinaryFile(localArchiveFile string) (err error) {
 	}
 
 	// 从网络下载
-	downloadURL, err := GetDownloadURL()
+	downloadURL, err := GetDownloadURL(tagName)
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func uninstallBinaryFile() (err error) {
 	}
 	return os.RemoveAll("/usr/local/bin/v2ray")
 }
-func updateBinaryFile(localArchiveFile string) (err error) {
+func updateBinaryFile(localArchiveFile string, tagName string) (err error) {
 	// 服务初始化
 	s, err := initService()
 	if err != nil {
@@ -64,7 +64,7 @@ func updateBinaryFile(localArchiveFile string) (err error) {
 	}
 
 	// 下载二进制文件
-	err = downloadBinaryFile(localArchiveFile)
+	err = downloadBinaryFile(localArchiveFile, tagName)
 	if err != nil {
 		return err
 	}

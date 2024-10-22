@@ -9,7 +9,8 @@ import (
 
 func main() {
 	var config string
-	var local string
+	var localFile string
+	var tagName string
 
 	cmds := []*cli.Command{
 		{
@@ -25,11 +26,17 @@ func main() {
 				&cli.StringFlag{
 					Name:        "local",
 					Aliases:     []string{"l"},
-					Destination: &local,
+					Destination: &localFile,
+				},
+				&cli.StringFlag{
+					Name:        "tag",
+					Aliases:     []string{"t"},
+					Usage:       "set v2ray tag name",
+					Destination: &tagName,
 				},
 			},
 			Action: func(ctx *cli.Context) (err error) {
-				err = downloadBinaryFile(local)
+				err = downloadBinaryFile(localFile, tagName)
 				if err != nil {
 					return err
 				}
@@ -67,11 +74,17 @@ func main() {
 				&cli.StringFlag{
 					Name:        "local",
 					Aliases:     []string{"l"},
-					Destination: &local,
+					Destination: &localFile,
+				},
+				&cli.StringFlag{
+					Name:        "tag",
+					Aliases:     []string{"t"},
+					Usage:       "set v2ray tag name",
+					Destination: &tagName,
 				},
 			},
 			Action: func(ctx *cli.Context) (err error) {
-				err = updateBinaryFile(local)
+				err = updateBinaryFile(localFile, tagName)
 				if err != nil {
 					return err
 				}
@@ -113,7 +126,7 @@ func main() {
 
 	app := &cli.App{
 		Usage:    "v2ray quick install tool",
-		Version:  "v3.02",
+		Version:  "v3.03",
 		Commands: cmds,
 	}
 
