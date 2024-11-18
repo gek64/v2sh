@@ -16,7 +16,7 @@ func main() {
 		{
 			Name:    "install",
 			Aliases: []string{"i"},
-			Usage:   "Install v2ray",
+			Usage:   "Install xray",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:        "config",
@@ -31,7 +31,7 @@ func main() {
 				&cli.StringFlag{
 					Name:        "tag",
 					Aliases:     []string{"t"},
-					Usage:       "set v2ray tag name",
+					Usage:       "set xray tag name",
 					Destination: &tagName,
 				},
 			},
@@ -53,7 +53,7 @@ func main() {
 		},
 		{
 			Name:  "uninstall",
-			Usage: "Remove config,cache and uninstall v2ray",
+			Usage: "Remove config,cache and uninstall xray",
 			Action: func(ctx *cli.Context) (err error) {
 				err = uninstallService()
 				if err != nil {
@@ -64,7 +64,7 @@ func main() {
 		},
 		{
 			Name:  "update",
-			Usage: "Update v2ray",
+			Usage: "Update xray",
 			Flags: []cli.Flag{
 				&cli.StringFlag{
 					Name:        "config",
@@ -79,7 +79,7 @@ func main() {
 				&cli.StringFlag{
 					Name:        "tag",
 					Aliases:     []string{"t"},
-					Usage:       "set v2ray tag name",
+					Usage:       "set x tag name",
 					Destination: &tagName,
 				},
 			},
@@ -125,8 +125,8 @@ func main() {
 	}
 
 	app := &cli.App{
-		Usage:    "v2ray quick install tool",
-		Version:  "v3.03",
+		Usage:    "xray quick install tool",
+		Version:  "v3.04",
 		Commands: cmds,
 	}
 

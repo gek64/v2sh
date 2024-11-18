@@ -1,9 +1,9 @@
 #!/sbin/openrc-run
 
-export V2RAY_LOCATION_ASSET=/usr/local/etc/v2ray
+export XRAY_LOCATION_ASSET=/usr/local/etc/xray
 
-command="/usr/local/bin/v2ray"
-command_args="run -config /usr/local/etc/v2ray/config.json"
+command="/usr/local/bin/xray"
+command_args="run -config /usr/local/etc/xray/config.json"
 command_background=true
 command_user="root"
 pidfile="/run/${RC_SVCNAME}.pid"

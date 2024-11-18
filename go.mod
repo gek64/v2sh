@@ -1,4 +1,4 @@
-module v2sh
+module xsh
 
 go 1.23.2
 

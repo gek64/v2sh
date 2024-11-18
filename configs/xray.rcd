@@ -1,18 +1,18 @@
 #!/bin/sh
-# PROVIDE: v2ray
+# PROVIDE: xray
 # REQUIRE: DAEMON NETWORKING
 
 . /etc/rc.subr
 
-export V2RAY_LOCATION_ASSET=/usr/local/etc/v2ray
+export XRAY_LOCATION_ASSET=/usr/local/etc/xray
 
-name=v2ray
+name=xray
 rcvar=${name}_enable
 command="/usr/local/bin/${name}"
 pidfile="/var/run/${name}.pid"
 start_cmd="${name}_start"
-v2ray_start() {
-  /usr/sbin/daemon -cf -p ${pidfile} ${command} run -config /usr/local/etc/v2ray/config.json
+xray_start() {
+  /usr/sbin/daemon -cf -p ${pidfile} ${command} run -config /usr/local/etc/xray/config.json
 }
 load_rc_config $name
 run_rc_command $1

@@ -17,7 +17,7 @@ func downloadBinaryFile(localArchiveFile string, tagName string) (err error) {
 		if err != nil {
 			return err
 		}
-		return os.WriteFile(filepath.Join(os.TempDir(), "v2ray.zip"), bytes, 0644)
+		return os.WriteFile(filepath.Join(os.TempDir(), "xray.zip"), bytes, 0644)
 	}
 
 	// 从网络下载
@@ -25,36 +25,36 @@ func downloadBinaryFile(localArchiveFile string, tagName string) (err error) {
 	if err != nil {
 		return err
 	}
-	return gDownloader.Download(downloadURL, filepath.Join(os.TempDir(), "v2ray.zip"), "")
+	return gDownloader.Download(downloadURL, filepath.Join(os.TempDir(), "xray.zip"), "")
 }
 func installBinaryFile() (err error) {
 	if runtime.GOOS != "windows" {
 		// 解压可执行文件
-		err = unzip.Decompress(filepath.Join(os.TempDir(), "v2ray.zip"), "/usr/local/bin", "v2ray")
+		err = unzip.Decompress(filepath.Join(os.TempDir(), "xray.zip"), "/usr/local/bin", "xray")
 		if err != nil {
 			return err
 		}
 		// 可执行文件赋权
-		err = os.Chmod("/usr/local/bin/v2ray", 0755)
+		err = os.Chmod("/usr/local/bin/xray", 0755)
 		if err != nil {
 			return err
 		}
 	} else {
 		// windows下解压文件名需要.exe后缀
-		err = unzip.Decompress(filepath.Join(os.TempDir(), "v2ray.zip"), "/usr/local/bin", "v2ray.exe")
+		err = unzip.Decompress(filepath.Join(os.TempDir(), "xray.zip"), "/usr/local/bin", "xray.exe")
 		if err != nil {
 			return err
 		}
 	}
 	// 解压资源文件
-	return unzip.Decompress(filepath.Join(os.TempDir(), "v2ray.zip"), "/usr/local/etc/v2ray", "geoip.dat", "geosite.dat")
+	return unzip.Decompress(filepath.Join(os.TempDir(), "xray.zip"), "/usr/local/etc/xray", "geoip.dat", "geosite.dat")
 }
 func uninstallBinaryFile() (err error) {
-	err = os.RemoveAll("/usr/local/etc/v2ray")
+	err = os.RemoveAll("/usr/local/etc/xray")
 	if err != nil {
 		return err
 	}
-	return os.RemoveAll("/usr/local/bin/v2ray")
+	return os.RemoveAll("/usr/local/bin/xray")
 }
 func updateBinaryFile(localArchiveFile string, tagName string) (err error) {
 	// 服务初始化
@@ -88,13 +88,13 @@ func updateBinaryFile(localArchiveFile string, tagName string) (err error) {
 // 配置文件操作
 func installConfig(file string) (err error) {
 	if file == "" {
-		return os.WriteFile("/usr/local/etc/v2ray/config.json", []byte("{}"), 0644)
+		return os.WriteFile("/usr/local/etc/xray/config.json", []byte("{}"), 0644)
 	}
 	bytes, err := os.ReadFile(file)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile("/usr/local/etc/v2ray/config.json", bytes, 0644)
+	return os.WriteFile("/usr/local/etc/xray/config.json", bytes, 0644)
 }
 
 // 服务操作
@@ -108,9 +108,9 @@ func initService() (service *gApp.Service, err error) {
 	// 获取服务名称
 	switch initSystem {
 	case "systemd":
-		serviceName = "v2ray.service"
+		serviceName = "xray.service"
 	default:
-		serviceName = "v2ray"
+		serviceName = "xray"
 	}
 	// 初始化服务
 	return gApp.NewService(initSystem, serviceName, serviceContent)
